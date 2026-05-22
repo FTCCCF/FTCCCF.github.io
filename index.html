@@ -1,3 +1,12 @@
+这个问题是因为 JavaScript 代码中的变量 `supabase` 被重复声明了。这通常发生在以下情况：
+1.  **代码重复粘贴**：你可能在文件中不小心粘贴了两次代码，或者在旧的代码下面粘贴了新的。
+2.  **浏览器/插件冲突**：某些浏览器插件或 Edge 的自动翻译功能可能会重复执行脚本。
+3.  **全局作用域冲突**：之前的版本中 `const supabase` 定义在全局作用域，如果页面重新加载或脚本执行两次就会报错。
+
+**解决方法：** 我将整个 JavaScript 代码包裹在一个立即执行函数 `(function(){ ... })();` 中，这样可以将所有变量变成局部变量，避免与全局环境或其他脚本冲突。同时我也确保了你提供的 Supabase 密钥配置正确。
+
+请直接复制下面的完整代码覆盖你的 `index.html`：
+
 ```html
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -451,722 +460,724 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
 <div class="copy-toast" id="copyToast">已复制到剪贴板</div>
 
 <script>
-// ============================================================
-// Supabase 配置
-// ============================================================
-const SUPABASE_URL = 'https://aybzbnscgnbvlhdekwej.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF5YnpibnNjZ25idmxoZGVrd2VqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0MDAxNTAsImV4cCI6MjA5NDk3NjE1MH0.143pyKjrNhdfpnlMCYVy7Lips0bvPMn5mbFmiTP9NTg';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+(function() {
+  // ============================================================
+  // Supabase 配置
+  // ============================================================
+  const SUPABASE_URL = 'https://aybzbnscgnbvlhdekwej.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF5YnpibnNjZ25idmxoZGVrd2VqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0MDAxNTAsImV4cCI6MjA5NDk3NjE1MH0.143pyKjrNhdfpnlMCYVy7Lips0bvPMn5mbFmiTP9NTg';
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// ============================================================
-// 常量
-// ============================================================
-const SESSION_KEY = 'xianr_session';
-const PROGRESS_TAGS = [
-  { id: 'f1', label: 'F1 如何科学地提问', icon: 'F1' },
-  { id: 'f2', label: 'F2 Logisim安装和使用', icon: 'F2' },
-  { id: 'f3', label: 'F3 数字逻辑电路基础', icon: 'F3' },
-  { id: 'f4', label: 'F4 计算机系统的状态机模型', icon: 'F4' },
-  { id: 'f5', label: 'F5 支持数列求和的简单处理器', icon: 'F5' },
-  { id: 'f6', label: 'F6 功能完备的迷你RISC-V处理器', icon: 'F6' },
-  { id: 'e1', label: 'E1 C语言程序设计', icon: 'E1' },
-  { id: 'e2', label: 'E2 硬件描述语言', icon: 'E2' },
-  { id: 'e3', label: 'E3 Linux系统安装和基本使用', icon: 'E3' },
-  { id: 'e4', label: 'E4 C程序的执行', icon: 'E4' },
-  { id: 'e4_1', label: 'E4 从C代码到二进制程序', icon: 'E4' },
-  { id: 'e4_2', label: 'E4 指令集模拟器', icon: 'E4' },
-  { id: 'e5_1', label: 'E5 RTL代码的仿真', icon: 'E5' },
-  { id: 'e5_2', label: 'E5 逻辑综合', icon: 'E5' },
-  { id: 'e5', label: 'E5 Verilog的RTL综合语义', icon: 'E5' }
-];
+  // ============================================================
+  // 常量
+  // ============================================================
+  const SESSION_KEY = 'xianr_session';
+  const PROGRESS_TAGS = [
+    { id: 'f1', label: 'F1 如何科学地提问', icon: 'F1' },
+    { id: 'f2', label: 'F2 Logisim安装和使用', icon: 'F2' },
+    { id: 'f3', label: 'F3 数字逻辑电路基础', icon: 'F3' },
+    { id: 'f4', label: 'F4 计算机系统的状态机模型', icon: 'F4' },
+    { id: 'f5', label: 'F5 支持数列求和的简单处理器', icon: 'F5' },
+    { id: 'f6', label: 'F6 功能完备的迷你RISC-V处理器', icon: 'F6' },
+    { id: 'e1', label: 'E1 C语言程序设计', icon: 'E1' },
+    { id: 'e2', label: 'E2 硬件描述语言', icon: 'E2' },
+    { id: 'e3', label: 'E3 Linux系统安装和基本使用', icon: 'E3' },
+    { id: 'e4', label: 'E4 C程序的执行', icon: 'E4' },
+    { id: 'e4_1', label: 'E4 从C代码到二进制程序', icon: 'E4' },
+    { id: 'e4_2', label: 'E4 指令集模拟器', icon: 'E4' },
+    { id: 'e5_1', label: 'E5 RTL代码的仿真', icon: 'E5' },
+    { id: 'e5_2', label: 'E5 逻辑综合', icon: 'E5' },
+    { id: 'e5', label: 'E5 Verilog的RTL综合语义', icon: 'E5' }
+  ];
 
-// ============================================================
-// 状态
-// ============================================================
-let currentFilter = 'all', currentSearch = '', currentPriority = 'all', currentStatus = 'all';
-let currentAnswerQuestionId = null, currentDetailQuestionId = null;
-let selectedProgress = new Set();
-let cache = { approvedQuestions: [], myQuestions: [], allQuestions: [], pendingCount: 0, isAdmin: false, lastFetch: 0 };
+  // ============================================================
+  // 状态
+  // ============================================================
+  let currentFilter = 'all', currentSearch = '', currentPriority = 'all', currentStatus = 'all';
+  let currentAnswerQuestionId = null, currentDetailQuestionId = null;
+  let selectedProgress = new Set();
+  let cache = { approvedQuestions: [], myQuestions: [], allQuestions: [], pendingCount: 0, isAdmin: false, lastFetch: 0 };
 
-// ============================================================
-// 工具函数
-// ============================================================
-function getSessionId() {
-  let sid = sessionStorage.getItem(SESSION_KEY);
-  if (!sid) { sid = 'USR-' + Math.random().toString(36).substr(2, 8).toUpperCase(); sessionStorage.setItem(SESSION_KEY, sid); }
-  return sid;
-}
-function generateQid() { return 'Q-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substr(2, 4).toUpperCase(); }
-function generateAid() { return 'A-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substr(2, 4).toUpperCase(); }
-function showNotification(msg, type = 'success') {
-  const el = document.createElement('div');
-  el.className = 'notification ' + type;
-  el.textContent = msg;
-  document.body.appendChild(el);
-  setTimeout(() => el.remove(), 3000);
-}
-function formatTime(t) {
-  if (!t) return '';
-  const ts = new Date(t).getTime(), diff = Date.now() - ts;
-  if (diff < 60000) return '刚刚';
-  if (diff < 3600000) return Math.floor(diff / 60000) + '分钟前';
-  if (diff < 86400000) return Math.floor(diff / 3600000) + '小时前';
-  if (diff < 604800000) return Math.floor(diff / 86400000) + '天前';
-  return new Date(ts).toLocaleDateString('zh-CN');
-}
-function formatFullTime(t) { return t ? new Date(t).toLocaleString('zh-CN') : ''; }
-function escapeHtml(text) { const div = document.createElement('div'); div.textContent = text || ''; return div.innerHTML; }
-function getProgressLabel(id) { const p = PROGRESS_TAGS.find(t => t.id === id); return p ? p.label : id; }
-function getProgressIcon(id) { const p = PROGRESS_TAGS.find(t => t.id === id); return p ? p.icon : '●'; }
+  // ============================================================
+  // 工具函数
+  // ============================================================
+  function getSessionId() {
+    let sid = sessionStorage.getItem(SESSION_KEY);
+    if (!sid) { sid = 'USR-' + Math.random().toString(36).substr(2, 8).toUpperCase(); sessionStorage.setItem(SESSION_KEY, sid); }
+    return sid;
+  }
+  function generateQid() { return 'Q-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substr(2, 4).toUpperCase(); }
+  function generateAid() { return 'A-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substr(2, 4).toUpperCase(); }
+  function showNotification(msg, type = 'success') {
+    const el = document.createElement('div');
+    el.className = 'notification ' + type;
+    el.textContent = msg;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 3000);
+  }
+  function formatTime(t) {
+    if (!t) return '';
+    const ts = new Date(t).getTime(), diff = Date.now() - ts;
+    if (diff < 60000) return '刚刚';
+    if (diff < 3600000) return Math.floor(diff / 60000) + '分钟前';
+    if (diff < 86400000) return Math.floor(diff / 3600000) + '小时前';
+    if (diff < 604800000) return Math.floor(diff / 86400000) + '天前';
+    return new Date(ts).toLocaleDateString('zh-CN');
+  }
+  function formatFullTime(t) { return t ? new Date(t).toLocaleString('zh-CN') : ''; }
+  function escapeHtml(text) { const div = document.createElement('div'); div.textContent = text || ''; return div.innerHTML; }
+  function getProgressLabel(id) { const p = PROGRESS_TAGS.find(t => t.id === id); return p ? p.label : id; }
+  function getProgressIcon(id) { const p = PROGRESS_TAGS.find(t => t.id === id); return p ? p.icon : '●'; }
 
-// ============================================================
-// Supabase 数据层
-// ============================================================
-async function checkConnection() {
-  const dot = document.getElementById('statusDot'), label = document.getElementById('connStatus');
-  try {
-    const { error } = await supabase.rpc('get_pending_count');
-    if (error && error.code !== '42883') throw error;
-    dot.classList.remove('offline');
-    label.textContent = 'SYS_ONLINE';
+  // ============================================================
+  // Supabase 数据层
+  // ============================================================
+  async function checkConnection() {
+    const dot = document.getElementById('statusDot'), label = document.getElementById('connStatus');
+    try {
+      const { error } = await supabase.rpc('get_pending_count');
+      if (error && error.code !== '42883') throw error;
+      dot.classList.remove('offline');
+      label.textContent = 'SYS_ONLINE';
+      return true;
+    } catch (e) {
+      dot.classList.add('offline');
+      label.textContent = 'OFFLINE';
+      return false;
+    }
+  }
+
+  async function refreshData() {
+    const session = getSessionId();
+    const [qRes, pRes] = await Promise.all([
+      supabase.rpc('get_my_questions', { my_session: session }),
+      supabase.rpc('get_pending_count').catch(() => ({ data: 0, error: null }))
+    ]);
+    if (qRes.error) { console.error('fetch questions:', qRes.error); showNotification('数据加载失败: ' + qRes.error.message, 'error'); return false; }
+    const questions = qRes.data || [];
+    const qids = questions.map(q => q.id);
+    let answersByQ = {};
+    if (qids.length > 0) {
+      const aRes = await supabase.from('answers').select('*').in('question_id', qids).order('created_at', { ascending: true });
+      if (!aRes.error && aRes.data) {
+        aRes.data.forEach(a => { if (!answersByQ[a.question_id]) answersByQ[a.question_id] = []; answersByQ[a.question_id].push(a); });
+      }
+    }
+    questions.forEach(q => { q.answers = answersByQ[q.id] || []; });
+    cache.myQuestions = questions;
+    cache.approvedQuestions = questions.filter(q => q.status === 'approved');
+    cache.pendingCount = pRes.data || 0;
+    cache.lastFetch = Date.now();
     return true;
-  } catch (e) {
-    dot.classList.add('offline');
-    label.textContent = 'OFFLINE';
-    return false;
   }
-}
 
-async function refreshData() {
-  const session = getSessionId();
-  const [qRes, pRes] = await Promise.all([
-    supabase.rpc('get_my_questions', { my_session: session }),
-    supabase.rpc('get_pending_count').catch(() => ({ data: 0, error: null }))
-  ]);
-  if (qRes.error) { console.error('fetch questions:', qRes.error); showNotification('数据加载失败: ' + qRes.error.message, 'error'); return false; }
-  const questions = qRes.data || [];
-  const qids = questions.map(q => q.id);
-  let answersByQ = {};
-  if (qids.length > 0) {
-    const aRes = await supabase.from('answers').select('*').in('question_id', qids).order('created_at', { ascending: true });
-    if (!aRes.error && aRes.data) {
-      aRes.data.forEach(a => { if (!answersByQ[a.question_id]) answersByQ[a.question_id] = []; answersByQ[a.question_id].push(a); });
+  async function refreshAllForAdmin() {
+    const { data, error } = await supabase.from('questions').select('*').order('created_at', { ascending: false });
+    if (error) { console.error('admin fetch:', error); return false; }
+    const questions = data || [];
+    const qids = questions.map(q => q.id);
+    let answersByQ = {};
+    if (qids.length > 0) {
+      const aRes = await supabase.from('answers').select('*').in('question_id', qids).order('created_at', { ascending: true });
+      if (!aRes.error && aRes.data) {
+        aRes.data.forEach(a => { if (!answersByQ[a.question_id]) answersByQ[a.question_id] = []; answersByQ[a.question_id].push(a); });
+      }
     }
+    questions.forEach(q => { q.answers = answersByQ[q.id] || []; });
+    cache.allQuestions = questions;
+    cache.pendingCount = questions.filter(q => q.status === 'pending').length;
   }
-  questions.forEach(q => { q.answers = answersByQ[q.id] || []; });
-  cache.myQuestions = questions;
-  cache.approvedQuestions = questions.filter(q => q.status === 'approved');
-  cache.pendingCount = pRes.data || 0;
-  cache.lastFetch = Date.now();
-  return true;
-}
 
-async function refreshAllForAdmin() {
-  const { data, error } = await supabase.from('questions').select('*').order('created_at', { ascending: false });
-  if (error) { console.error('admin fetch:', error); return false; }
-  const questions = data || [];
-  const qids = questions.map(q => q.id);
-  let answersByQ = {};
-  if (qids.length > 0) {
-    const aRes = await supabase.from('answers').select('*').in('question_id', qids).order('created_at', { ascending: true });
-    if (!aRes.error && aRes.data) {
-      aRes.data.forEach(a => { if (!answersByQ[a.question_id]) answersByQ[a.question_id] = []; answersByQ[a.question_id].push(a); });
+  // ============================================================
+  // 页面切换
+  // ============================================================
+  window.switchPage = async function(page) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('page-' + page).classList.add('active');
+    const idx = ['home', 'ask', 'stats', 'admin'].indexOf(page);
+    document.querySelectorAll('.nav-btn')[idx].classList.add('active');
+    if (page === 'home') await renderQuestions();
+    else if (page === 'ask') { renderProgressGrid(); await renderMyQuestions(); }
+    else if (page === 'stats') await renderStatsPage();
+    else if (page === 'admin') {
+      if (cache.isAdmin) { await refreshAllForAdmin(); renderReviewQueue(); renderAdminQuestions(); updateAdminOverview(); }
     }
-  }
-  questions.forEach(q => { q.answers = answersByQ[q.id] || []; });
-  cache.allQuestions = questions;
-  cache.pendingCount = questions.filter(q => q.status === 'pending').length;
-}
+  };
 
-// ============================================================
-// 页面切换
-// ============================================================
-async function switchPage(page) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('page-' + page).classList.add('active');
-  const idx = ['home', 'ask', 'stats', 'admin'].indexOf(page);
-  document.querySelectorAll('.nav-btn')[idx].classList.add('active');
-  if (page === 'home') await renderQuestions();
-  else if (page === 'ask') { renderProgressGrid(); await renderMyQuestions(); }
-  else if (page === 'stats') await renderStatsPage();
-  else if (page === 'admin') {
-    if (cache.isAdmin) { await refreshAllForAdmin(); renderReviewQueue(); renderAdminQuestions(); updateAdminOverview(); }
-  }
-}
-
-// ============================================================
-// 进度标签
-// ============================================================
-function renderProgressGrid() {
-  const grid = document.getElementById('progressGrid');
-  grid.innerHTML = PROGRESS_TAGS.map(p => `
-    <label class="progress-option ${selectedProgress.has(p.id) ? 'selected' : ''}" data-id="${p.id}">
-      <input type="checkbox" value="${p.id}" ${selectedProgress.has(p.id) ? 'checked' : ''}>
-      <span class="check-mark">${selectedProgress.has(p.id) ? '✓' : ''}</span>
-      <span>${p.icon} ${p.label}</span>
-    </label>`).join('');
-  grid.querySelectorAll('.progress-option').forEach(opt => {
-    opt.addEventListener('click', (e) => {
-      e.preventDefault();
-      const id = opt.dataset.id;
-      if (selectedProgress.has(id)) selectedProgress.delete(id); else selectedProgress.add(id);
-      renderProgressGrid();
+  // ============================================================
+  // 进度标签
+  // ============================================================
+  function renderProgressGrid() {
+    const grid = document.getElementById('progressGrid');
+    grid.innerHTML = PROGRESS_TAGS.map(p => `
+      <label class="progress-option ${selectedProgress.has(p.id) ? 'selected' : ''}" data-id="${p.id}">
+        <input type="checkbox" value="${p.id}" ${selectedProgress.has(p.id) ? 'checked' : ''}>
+        <span class="check-mark">${selectedProgress.has(p.id) ? '✓' : ''}</span>
+        <span>${p.icon} ${p.label}</span>
+      </label>`).join('');
+    grid.querySelectorAll('.progress-option').forEach(opt => {
+      opt.addEventListener('click', (e) => {
+        e.preventDefault();
+        const id = opt.dataset.id;
+        if (selectedProgress.has(id)) selectedProgress.delete(id); else selectedProgress.add(id);
+        renderProgressGrid();
+      });
     });
-  });
-}
-
-// ============================================================
-// 筛选标签
-// ============================================================
-function renderFilterTags() {
-  const approved = cache.approvedQuestions;
-  const counts = {};
-  PROGRESS_TAGS.forEach(t => counts[t.id] = 0);
-  approved.forEach(q => (q.progress || []).forEach(p => { counts[p] = (counts[p] || 0) + 1; }));
-  document.getElementById('filterTags').innerHTML = `
-    <span class="tag ${currentFilter === 'all' ? 'active' : ''}" onclick="filterByTag('all')">全部<span class="tag-count">${approved.length}</span></span>
-    ${PROGRESS_TAGS.filter(t => counts[t.id] > 0).map(t => `
-      <span class="tag ${currentFilter === t.id ? 'active' : ''}" onclick="filterByTag('${t.id}')">${t.icon} ${t.label.substring(3)}<span class="tag-count">${counts[t.id]}</span></span>`).join('')}`;
-}
-
-function filterByTag(tag) { currentFilter = tag; renderQuestionsList(); }
-function filterQuestions() {
-  currentSearch = document.getElementById('searchInput').value;
-  currentPriority = document.getElementById('priorityFilter').value;
-  currentStatus = document.getElementById('statusFilter').value;
-  renderQuestionsList();
-}
-
-// ============================================================
-// 渲染问题列表
-// ============================================================
-async function renderQuestions() {
-  await refreshData();
-  updatePendingBadge();
-  updateStatsBar();
-  renderFilterTags();
-  renderQuestionsList();
-}
-
-function updateStatsBar() {
-  const aa = cache.approvedQuestions;
-  document.getElementById('stat-total').textContent = aa.length;
-  document.getElementById('stat-answered').textContent = aa.filter(q => q.answers.length > 0).length;
-  document.getElementById('stat-pending').textContent = cache.pendingCount;
-  const today = new Date().toDateString();
-  document.getElementById('stat-today').textContent = aa.filter(q => new Date(q.created_at).toDateString() === today).length;
-  const totalAnswers = aa.reduce((s, q) => s + q.answers.length, 0);
-  const adoptedQ = aa.filter(q => q.answers.some(a => a.adopted)).length;
-  const helpers = new Set();
-  aa.forEach(q => q.answers.forEach(a => helpers.add(a.nickname || '匿名')));
-  document.getElementById('hero-total').textContent = aa.length;
-  document.getElementById('hero-adopted').textContent = aa.length ? Math.round(adoptedQ / aa.length * 100) + '%' : '0%';
-  document.getElementById('hero-helpers').textContent = helpers.size;
-}
-
-function renderQuestionsList() {
-  let questions = [...cache.approvedQuestions];
-  if (currentFilter !== 'all') questions = questions.filter(q => (q.progress || []).includes(currentFilter));
-  if (currentPriority !== 'all') questions = questions.filter(q => q.priority === currentPriority);
-  if (currentStatus === 'answered') questions = questions.filter(q => q.answers.length > 0);
-  if (currentStatus === 'unanswered') questions = questions.filter(q => q.answers.length === 0);
-  if (currentStatus === 'adopted') questions = questions.filter(q => q.answers.some(a => a.adopted));
-  if (currentSearch) {
-    const kw = currentSearch.toLowerCase();
-    questions = questions.filter(q => q.title.toLowerCase().includes(kw) || q.content.toLowerCase().includes(kw) || q.qid.toLowerCase().includes(kw));
   }
-  questions.sort((a, b) => {
-    const pOrder = { high: 0, medium: 1, low: 2 };
-    if (pOrder[a.priority] !== pOrder[b.priority]) return pOrder[a.priority] - pOrder[b.priority];
-    return new Date(b.created_at) - new Date(a.created_at);
-  });
-  const container = document.getElementById('questionList');
-  if (questions.length === 0) {
-    container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><div class="empty-state-text">暂无符合条件的问题</div></div>';
-    return;
-  }
-  container.innerHTML = questions.map(q => renderQuestionCard(q)).join('');
-}
 
-function renderQuestionCard(q) {
-  const answered = q.answers.length > 0, adopted = q.answers.some(a => a.adopted);
-  const isOwner = q.session_id === getSessionId();
-  const progressTags = (q.progress || []).map(p => `<span class="card-tag progress">${getProgressIcon(p)} ${getProgressLabel(p)}</span>`).join('');
-  const answersHtml = q.answers.map(a => `
-    <div class="answer-item ${a.adopted ? 'adopted' : ''}">
-      <div>${escapeHtml(a.content)}${a.adopted ? '<span class="adopted-badge">✓ 已采纳</span>' : ''}</div>
-      <div class="answer-meta">
-        <span>— ${a.nickname || '匿名'} · ${formatTime(a.created_at)}</span>
-        ${isOwner && !adopted && q.status === 'approved' ? `<button class="card-action-btn success" onclick="adoptAnswer('${q.id}','${a.id}')">采纳</button>` : ''}
-      </div>
-    </div>`).join('');
-  let statusBadge = '';
-  if (q.status === 'pending') statusBadge = '<span class="card-status pending">PENDING</span>';
-  if (q.status === 'rejected') statusBadge = '<span class="card-status rejected">REJECTED</span>';
-  return `
-    <div class="card ${q.status !== 'approved' ? q.status + '-review' : ''}">
-      <div class="card-header">
-        <span class="card-id" onclick="copyId('${q.qid}')">${q.qid}</span>
-        <div class="card-meta">${statusBadge}<span class="priority-badge ${q.priority}">${q.priority === 'high' ? '● HIGH' : q.priority === 'medium' ? '● MED' : '● LOW'}</span>${progressTags}</div>
-      </div>
-      <div class="card-body">
-        <div class="card-title">${escapeHtml(q.title)}</div>
-        <div class="card-content">${escapeHtml(q.content.substring(0, 180))}${q.content.length > 180 ? '...' : ''}</div>
-        ${q.answers.length > 0 ? `<div class="answers-section"><div style="font-size:11px;color:var(--accent-primary);margin-bottom:8px;font-family:'JetBrains Mono',monospace">▶ ${q.answers.length} 条回答 ${adopted ? '· ✅ 已采纳最佳答案' : ''}</div>${answersHtml}</div>` : ''}
-        ${q.reject_reason ? `<div class="review-reason">📛 拒绝理由：${escapeHtml(q.reject_reason)}</div>` : ''}
-      </div>
-      <div class="card-footer">
-        <span>${formatTime(q.created_at)} · ${adopted ? '✅ 已采纳' : answered ? '💬 已回答' : '⏳ 等待回答'}</span>
-        <div class="card-actions">
-          <button class="card-action-btn" onclick="viewDetail('${q.id}')">查看详情</button>
-          ${q.status === 'approved' ? `<button class="card-action-btn" onclick="openAnswer('${q.id}')">回答</button>` : ''}
-          <button class="card-action-btn" onclick="copyId('${q.qid}')">复制ID</button>
-          ${isOwner && q.status !== 'approved' ? `<button class="card-action-btn danger" onclick="deleteOwnQuestion('${q.id}')">撤回</button>` : ''}
+  // ============================================================
+  // 筛选标签
+  // ============================================================
+  function renderFilterTags() {
+    const approved = cache.approvedQuestions;
+    const counts = {};
+    PROGRESS_TAGS.forEach(t => counts[t.id] = 0);
+    approved.forEach(q => (q.progress || []).forEach(p => { counts[p] = (counts[p] || 0) + 1; }));
+    document.getElementById('filterTags').innerHTML = `
+      <span class="tag ${currentFilter === 'all' ? 'active' : ''}" onclick="filterByTag('all')">全部<span class="tag-count">${approved.length}</span></span>
+      ${PROGRESS_TAGS.filter(t => counts[t.id] > 0).map(t => `
+        <span class="tag ${currentFilter === t.id ? 'active' : ''}" onclick="filterByTag('${t.id}')">${t.icon} ${t.label.substring(3)}<span class="tag-count">${counts[t.id]}</span></span>`).join('')}`;
+  }
+
+  window.filterByTag = function(tag) { currentFilter = tag; renderQuestionsList(); };
+  window.filterQuestions = function() {
+    currentSearch = document.getElementById('searchInput').value;
+    currentPriority = document.getElementById('priorityFilter').value;
+    currentStatus = document.getElementById('statusFilter').value;
+    renderQuestionsList();
+  };
+
+  // ============================================================
+  // 渲染问题列表
+  // ============================================================
+  async function renderQuestions() {
+    await refreshData();
+    updatePendingBadge();
+    updateStatsBar();
+    renderFilterTags();
+    renderQuestionsList();
+  }
+
+  function updateStatsBar() {
+    const aa = cache.approvedQuestions;
+    document.getElementById('stat-total').textContent = aa.length;
+    document.getElementById('stat-answered').textContent = aa.filter(q => q.answers.length > 0).length;
+    document.getElementById('stat-pending').textContent = cache.pendingCount;
+    const today = new Date().toDateString();
+    document.getElementById('stat-today').textContent = aa.filter(q => new Date(q.created_at).toDateString() === today).length;
+    const totalAnswers = aa.reduce((s, q) => s + q.answers.length, 0);
+    const adoptedQ = aa.filter(q => q.answers.some(a => a.adopted)).length;
+    const helpers = new Set();
+    aa.forEach(q => q.answers.forEach(a => helpers.add(a.nickname || '匿名')));
+    document.getElementById('hero-total').textContent = aa.length;
+    document.getElementById('hero-adopted').textContent = aa.length ? Math.round(adoptedQ / aa.length * 100) + '%' : '0%';
+    document.getElementById('hero-helpers').textContent = helpers.size;
+  }
+
+  function renderQuestionsList() {
+    let questions = [...cache.approvedQuestions];
+    if (currentFilter !== 'all') questions = questions.filter(q => (q.progress || []).includes(currentFilter));
+    if (currentPriority !== 'all') questions = questions.filter(q => q.priority === currentPriority);
+    if (currentStatus === 'answered') questions = questions.filter(q => q.answers.length > 0);
+    if (currentStatus === 'unanswered') questions = questions.filter(q => q.answers.length === 0);
+    if (currentStatus === 'adopted') questions = questions.filter(q => q.answers.some(a => a.adopted));
+    if (currentSearch) {
+      const kw = currentSearch.toLowerCase();
+      questions = questions.filter(q => q.title.toLowerCase().includes(kw) || q.content.toLowerCase().includes(kw) || q.qid.toLowerCase().includes(kw));
+    }
+    questions.sort((a, b) => {
+      const pOrder = { high: 0, medium: 1, low: 2 };
+      if (pOrder[a.priority] !== pOrder[b.priority]) return pOrder[a.priority] - pOrder[b.priority];
+      return new Date(b.created_at) - new Date(a.created_at);
+    });
+    const container = document.getElementById('questionList');
+    if (questions.length === 0) {
+      container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><div class="empty-state-text">暂无符合条件的问题</div></div>';
+      return;
+    }
+    container.innerHTML = questions.map(q => renderQuestionCard(q)).join('');
+  }
+
+  function renderQuestionCard(q) {
+    const answered = q.answers.length > 0, adopted = q.answers.some(a => a.adopted);
+    const isOwner = q.session_id === getSessionId();
+    const progressTags = (q.progress || []).map(p => `<span class="card-tag progress">${getProgressIcon(p)} ${getProgressLabel(p)}</span>`).join('');
+    const answersHtml = q.answers.map(a => `
+      <div class="answer-item ${a.adopted ? 'adopted' : ''}">
+        <div>${escapeHtml(a.content)}${a.adopted ? '<span class="adopted-badge">✓ 已采纳</span>' : ''}</div>
+        <div class="answer-meta">
+          <span>— ${a.nickname || '匿名'} · ${formatTime(a.created_at)}</span>
+          ${isOwner && !adopted && q.status === 'approved' ? `<button class="card-action-btn success" onclick="adoptAnswer('${q.id}','${a.id}')">采纳</button>` : ''}
         </div>
-      </div>
-    </div>`;
-}
-
-// ============================================================
-// 提交问题
-// ============================================================
-async function submitQuestion() {
-  const title = document.getElementById('askTitle').value.trim();
-  const content = document.getElementById('askContent').value.trim();
-  const priority = document.getElementById('askPriority').value;
-  const progress = Array.from(selectedProgress);
-  if (!title) { showNotification('请输入问题标题', 'error'); return; }
-  if (!content) { showNotification('请输入问题详情', 'error'); return; }
-  if (title.length > 100) { showNotification('标题不能超过100个字符', 'error'); return; }
-  if (progress.length === 0) { showNotification('请至少选择一个进度标签', 'error'); return; }
-  const btn = document.getElementById('submitBtn');
-  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>提交中...';
-  const qid = generateQid();
-  const { error } = await supabase.from('questions').insert({ qid, title, content, progress, priority, status: 'pending', session_id: getSessionId() });
-  btn.disabled = false; btn.textContent = '提交审核';
-  if (error) { showNotification('提交失败: ' + error.message, 'error'); return; }
-  clearForm(); showNotification('问题已提交，等待管理员审核。ID: ' + qid);
-  await renderMyQuestions(); updatePendingBadge();
-}
-
-function clearForm() {
-  document.getElementById('askTitle').value = '';
-  document.getElementById('askContent').value = '';
-  document.getElementById('askPriority').value = 'medium';
-  selectedProgress.clear();
-  renderProgressGrid();
-}
-
-async function renderMyQuestions() {
-  await refreshData();
-  const myQ = cache.myQuestions.filter(q => q.session_id === getSessionId());
-  const container = document.getElementById('myQuestions');
-  if (myQ.length === 0) { container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📝</div><div class="empty-state-text">你还没有提过问题</div></div>'; return; }
-  container.innerHTML = myQ.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).map(q => renderQuestionCard(q)).join('');
-}
-
-async function deleteOwnQuestion(id) {
-  if (!confirm('确定撤回这个问题吗？')) return;
-  const { data, error } = await supabase.rpc('delete_own_question', { p_question_id: id, my_session: getSessionId() });
-  if (error) { showNotification('撤回失败: ' + error.message, 'error'); return; }
-  if (data) { showNotification('问题已撤回'); await renderMyQuestions(); await renderQuestions(); }
-  else showNotification('撤回失败（仅允许撤回未通过的问题）', 'error');
-}
-
-// ============================================================
-// 回答
-// ============================================================
-async function openAnswer(qid) {
-  currentAnswerQuestionId = qid;
-  const q = cache.myQuestions.find(q => q.id === qid) || cache.approvedQuestions.find(q => q.id === qid) || cache.allQuestions.find(q => q.id === qid);
-  if (!q) return;
-  document.getElementById('answerQuestionPreview').innerHTML = `<strong>${escapeHtml(q.title)}</strong><br><span style="font-size:12px;color:var(--text-dim)">${escapeHtml(q.content.substring(0, 200))}</span>`;
-  document.getElementById('answerContent').value = '';
-  document.getElementById('answerNickname').value = '';
-  document.getElementById('answerModal').classList.add('active');
-}
-
-async function submitAnswer() {
-  const content = document.getElementById('answerContent').value.trim();
-  const nickname = document.getElementById('answerNickname').value.trim();
-  if (!content) { showNotification('请输入回答内容', 'error'); return; }
-  const btn = document.getElementById('submitAnswerBtn');
-  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>提交中...';
-  const { error } = await supabase.from('answers').insert({ question_id: currentAnswerQuestionId, aid: generateAid(), content, nickname: nickname || '匿名', adopted: false });
-  btn.disabled = false; btn.textContent = '提交回答';
-  if (error) { showNotification('提交失败: ' + error.message, 'error'); return; }
-  closeModal('answerModal'); showNotification('回答提交成功！');
-  await refreshData(); renderQuestionsList(); await renderMyQuestions();
-}
-
-async function adoptAnswer(qid, aid) {
-  if (!confirm('确定采纳这条回答为最佳答案吗？采纳后不可更改。')) return;
-  const { data, error } = await supabase.rpc('adopt_answer', { p_answer_id: aid, my_session: getSessionId() });
-  if (error) { showNotification('采纳失败: ' + error.message, 'error'); return; }
-  if (data) {
-    showNotification('已采纳该回答！');
-    await refreshData(); renderQuestionsList(); await renderMyQuestions();
-    if (document.getElementById('detailModal').classList.contains('active')) viewDetail(qid);
-  } else showNotification('采纳失败（仅提问者可操作）', 'error');
-}
-
-async function viewDetail(qid) {
-  currentDetailQuestionId = qid;
-  const q = cache.myQuestions.find(q => q.id === qid) || cache.approvedQuestions.find(q => q.id === qid) || cache.allQuestions.find(q => q.id === qid);
-  if (!q) return;
-  const isOwner = q.session_id === getSessionId(), adopted = q.answers.some(a => a.adopted);
-  const progressHtml = (q.progress || []).map(p => `<span class="card-tag progress">${getProgressIcon(p)} ${getProgressLabel(p)}</span>`).join(' ');
-  const answersHtml = q.answers.length > 0 ? q.answers.map(a => `
-    <div class="answer-item ${a.adopted ? 'adopted' : ''}">
-      <div>${escapeHtml(a.content)}${a.adopted ? '<span class="adopted-badge">✓ 已采纳</span>' : ''}</div>
-      <div class="answer-meta">
-        <span>— ${a.nickname || '匿名'} · ${formatFullTime(a.created_at)}</span>
-        ${isOwner && !adopted && q.status === 'approved' ? `<button class="card-action-btn success" onclick="adoptAnswer('${q.id}','${a.id}')">采纳</button>` : ''}
-      </div>
-    </div>`).join('') : '<div style="color:var(--text-dim);font-size:13px;padding:12px">暂无回答，成为第一个回答者吧！</div>';
-  document.getElementById('detailContent').innerHTML = `
-    <div style="margin-bottom:12px;display:flex;gap:6px;align-items:center;flex-wrap:wrap">
-      <span class="card-id">${q.qid}</span>
-      <span class="priority-badge ${q.priority}">${q.priority === 'high' ? '● HIGH' : q.priority === 'medium' ? '● MED' : '● LOW'}</span>
-      ${progressHtml}
-    </div>
-    <h3 style="font-size:18px;margin-bottom:14px;line-height:1.6">${escapeHtml(q.title)}</h3>
-    <p style="font-size:14px;color:var(--text-secondary);line-height:1.9;white-space:pre-wrap;margin-bottom:18px">${escapeHtml(q.content)}</p>
-    <div style="font-size:11px;color:var(--text-dim);font-family:'JetBrains Mono',monospace">📅 ${formatFullTime(q.created_at)}</div>
-    <div class="decor-line"></div>
-    <h4 style="font-size:13px;color:var(--accent-primary);margin-bottom:12px;letter-spacing:2px">回答 (${q.answers.length})</h4>
-    ${answersHtml}`;
-  document.getElementById('detailAnswerBtn').style.display = q.status === 'approved' ? '' : 'none';
-  document.getElementById('detailModal').classList.add('active');
-}
-
-function openAnswerFromDetail() { closeModal('detailModal'); setTimeout(() => openAnswer(currentDetailQuestionId), 300); }
-function copyId(id) {
-  navigator.clipboard.writeText(id).then(() => {
-    const toast = document.getElementById('copyToast'); toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 2000);
-  });
-}
-function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-
-// ============================================================
-// 数据统计
-// ============================================================
-async function renderStatsPage() {
-  await refreshData();
-  const approved = cache.approvedQuestions;
-  const totalAnswers = approved.reduce((s, q) => s + q.answers.length, 0);
-  const adoptedQ = approved.filter(q => q.answers.some(a => a.adopted)).length;
-  const totalAdopted = approved.reduce((s, q) => s + q.answers.filter(a => a.adopted).length, 0);
-  document.getElementById('stats-total-q').textContent = approved.length;
-  document.getElementById('stats-total-a').textContent = totalAnswers;
-  document.getElementById('stats-adopted').textContent = totalAdopted;
-  document.getElementById('stats-rate').textContent = approved.length ? Math.round(adoptedQ / approved.length * 100) + '%' : '0%';
-
-  const progressCounts = {};
-  PROGRESS_TAGS.forEach(t => progressCounts[t.id] = 0);
-  approved.forEach(q => (q.progress || []).forEach(p => progressCounts[p] = (progressCounts[p] || 0) + 1));
-  const maxProg = Math.max(...Object.values(progressCounts), 1);
-  document.getElementById('progressStats').innerHTML = PROGRESS_TAGS.filter(t => progressCounts[t.id] > 0).map(t => `
-    <div class="bar-row"><div class="bar-label">${t.icon} ${t.label}</div><div class="bar-track"><div class="bar-fill cyan" style="width:${progressCounts[t.id] / maxProg * 100}%"></div></div><div class="bar-value cyan">${progressCounts[t.id]}</div></div>`).join('') || '<div style="color:var(--text-dim);font-size:12px">暂无数据</div>';
-
-  const priCounts = { high: 0, medium: 0, low: 0 };
-  approved.forEach(q => priCounts[q.priority]++);
-  const maxPri = Math.max(...Object.values(priCounts), 1);
-  document.getElementById('priorityStats').innerHTML = Object.entries(priCounts).map(([k, v]) => `
-    <div class="bar-row"><div class="bar-label">${k === 'high' ? '🔴 高' : k === 'medium' ? '🟠 中' : '🟢 低'}</div><div class="bar-track"><div class="bar-fill" style="width:${v / maxPri * 100}%"></div></div><div class="bar-value">${v}</div></div>`).join('');
-
-  let reviewCounts = { approved: 0, pending: 0, rejected: 0 };
-  const rcRes = await supabase.rpc('get_pending_count');
-  reviewCounts.pending = rcRes.data || 0;
-  reviewCounts.approved = approved.length;
-  const rejRes = await supabase.from('questions').select('id', { count: 'exact', head: true }).eq('status', 'rejected');
-  reviewCounts.rejected = rejRes.count || 0;
-  renderDonut(reviewCounts);
-
-  const helperStats = {};
-  approved.forEach(q => q.answers.forEach(a => {
-    const name = a.nickname || '匿名';
-    if (!helperStats[name]) helperStats[name] = { count: 0, adopted: 0 };
-    helperStats[name].count++;
-    if (a.adopted) helperStats[name].adopted++;
-  }));
-  const topHelpers = Object.entries(helperStats).sort((a, b) => b[1].count - a[1].count).slice(0, 5);
-  document.getElementById('helperRank').innerHTML = topHelpers.length ? topHelpers.map(([name, s], i) => `
-    <li class="rank-item"><span class="rank-pos">#${i + 1}</span><span class="rank-name">${escapeHtml(name)}${s.adopted > 0 ? ` <span style="color:var(--success);font-size:11px">✓${s.adopted}</span>` : ''}</span><span class="rank-count">${s.count}条</span></li>`).join('') : '<div style="color:var(--text-dim);font-size:12px;padding:12px 0">暂无回答数据</div>';
-
-  renderTimeline();
-
-  const adoptionByProgress = {};
-  approved.forEach(q => { (q.progress || []).forEach(p => {
-    if (!adoptionByProgress[p]) adoptionByProgress[p] = { total: 0, adopted: 0 };
-    adoptionByProgress[p].total++;
-    if (q.answers.some(a => a.adopted)) adoptionByProgress[p].adopted++;
-  }); });
-  document.getElementById('adoptionStats').innerHTML = Object.keys(adoptionByProgress).length ? Object.entries(adoptionByProgress).map(([p, s]) => `
-    <div class="bar-row"><div class="bar-label">${getProgressIcon(p)} ${getProgressLabel(p)}</div><div class="bar-track"><div class="bar-fill" style="width:${s.total ? s.adopted / s.total * 100 : 0}%"></div></div><div class="bar-value">${s.adopted}/${s.total}</div></div>`).join('') : '<div style="color:var(--text-dim);font-size:12px">暂无采纳数据</div>';
-
-  const multiAnsQ = approved.filter(q => q.answers.length > 1).length;
-  const oneAnsQ = approved.filter(q => q.answers.length === 1).length;
-  const zeroAnsQ = approved.filter(q => q.answers.length === 0).length;
-  const maxA = Math.max(multiAnsQ, oneAnsQ, zeroAnsQ, 1);
-  document.getElementById('answerAnalysis').innerHTML = `
-    <div class="bar-row"><div class="bar-label">多回答 (≥2)</div><div class="bar-track"><div class="bar-fill" style="width:${multiAnsQ / maxA * 100}%"></div></div><div class="bar-value">${multiAnsQ}</div></div>
-    <div class="bar-row"><div class="bar-label">单回答 (=1)</div><div class="bar-track"><div class="bar-fill cyan" style="width:${oneAnsQ / maxA * 100}%"></div></div><div class="bar-value cyan">${oneAnsQ}</div></div>
-    <div class="bar-row"><div class="bar-label">零回答 (=0)</div><div class="bar-track"><div class="bar-fill" style="width:${zeroAnsQ / maxA * 100}%;background:linear-gradient(90deg,rgba(208,64,64,0.5),var(--danger))"></div></div><div class="bar-value" style="color:var(--danger)">${zeroAnsQ}</div></div>
-    <div style="margin-top:16px;padding-top:12px;border-top:1px dashed var(--border-color);font-size:12px;color:var(--text-secondary);line-height:1.7">
-      <div>📊 平均每问题回答数：<span style="color:var(--accent-primary);font-family:'JetBrains Mono',monospace">${approved.length ? (totalAnswers / approved.length).toFixed(2) : 0}</span></div>
-      <div>⭐ 平均每条回答采纳率：<span style="color:var(--accent-primary);font-family:'JetBrains Mono',monospace">${totalAnswers ? (totalAdopted / totalAnswers * 100).toFixed(1) + '%' : '0%'}</span></div>
-    </div>`;
-}
-
-function renderDonut(counts) {
-  const total = counts.approved + counts.pending + counts.rejected;
-  if (total === 0) { document.getElementById('reviewDonut').innerHTML = '<div style="color:var(--text-dim);font-size:12px">暂无数据</div>'; return; }
-  const colors = { approved: '#40b070', pending: '#a070d0', rejected: '#d04040' };
-  const labels = { approved: '已通过', pending: '待审核', rejected: '已拒绝' };
-  let offset = 0;
-  const radius = 40, circ = 2 * Math.PI * radius;
-  const segments = Object.entries(counts).filter(([k, v]) => v > 0).map(([k, v]) => {
-    const len = (v / total) * circ;
-    const seg = `<circle cx="60" cy="60" r="${radius}" fill="none" stroke="${colors[k]}" stroke-width="14" stroke-dasharray="${len} ${circ - len}" stroke-dashoffset="${-offset}" transform="rotate(-90 60 60)"/>`;
-    offset += len;
-    return seg;
-  });
-  document.getElementById('reviewDonut').innerHTML = `
-    <svg class="donut-svg" width="120" height="120" viewBox="0 0 120 120">
-      <circle cx="60" cy="60" r="${radius}" fill="none" stroke="var(--bg-primary)" stroke-width="14"/>
-      ${segments.join('')}
-      <text x="60" y="58" text-anchor="middle" fill="var(--accent-primary)" font-size="18" font-weight="700" font-family="JetBrains Mono">${total}</text>
-      <text x="60" y="74" text-anchor="middle" fill="var(--text-dim)" font-size="8" font-family="JetBrains Mono">TOTAL</text>
-    </svg>
-    <div class="donut-legend">
-      ${Object.entries(counts).map(([k, v]) => `<div class="legend-item"><div class="legend-dot" style="background:${colors[k]}"></div><div class="legend-label">${labels[k]}</div><div class="legend-value">${v} <span style="color:var(--text-dim);font-size:10px">(${total ? Math.round(v / total * 100) : 0}%)</span></div></div>`).join('')}
-    </div>`;
-}
-
-function renderTimeline() {
-  const approved = cache.approvedQuestions;
-  const days = [], counts = [];
-  const now = new Date(); now.setHours(0, 0, 0, 0);
-  for (let i = 13; i >= 0; i--) {
-    const d = new Date(now); d.setDate(d.getDate() - i); days.push(d);
-    counts.push(approved.filter(q => new Date(q.created_at).toDateString() === d.toDateString()).length);
-  }
-  const max = Math.max(...counts, 1);
-  document.getElementById('timelineChart').innerHTML = counts.map((c, i) => `<div class="timeline-bar" style="height:${c ? (c / max * 100) : 3}%"></div>`).join('');
-  document.getElementById('timelineLabels').innerHTML = days.map((d, i) => {
-    if (i % 2 === 0 || i === days.length - 1) return `<span style="flex:1;text-align:center">${d.getMonth() + 1}/${d.getDate()}</span>`;
-    return '<span style="flex:1"></span>';
-  }).join('');
-}
-
-// ============================================================
-// 管理员
-// ============================================================
-async function adminLogin_fn() {
-  const email = document.getElementById('adminEmail').value.trim();
-  const password = document.getElementById('adminPassword').value;
-  if (!email || !password) { showNotification('请输入邮箱和密码', 'error'); return; }
-  const btn = document.getElementById('loginBtn');
-  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>登录中...';
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-  btn.disabled = false; btn.textContent = '登录';
-  if (error) { showNotification('登录失败: ' + error.message, 'error'); return; }
-  cache.isAdmin = true;
-  document.getElementById('adminLogin').style.display = 'none';
-  document.getElementById('adminPanel').style.display = 'block';
-  document.getElementById('adminEmailDisplay').textContent = email;
-  await refreshAllForAdmin();
-  renderReviewQueue(); renderAdminQuestions(); updateAdminOverview();
-  showNotification('管理员登录成功');
-}
-
-async function adminLogout() {
-  await supabase.auth.signOut();
-  cache.isAdmin = false; cache.allQuestions = [];
-  document.getElementById('adminLogin').style.display = 'block';
-  document.getElementById('adminPanel').style.display = 'none';
-  document.getElementById('adminEmail').value = '';
-  document.getElementById('adminPassword').value = '';
-  showNotification('已退出管理员');
-}
-
-function switchAdminTab(tab, event) {
-  document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-  event.target.classList.add('active');
-  document.getElementById('admin-tab-' + tab).classList.add('active');
-}
-
-function updatePendingBadge() {
-  const badge = document.getElementById('pendingBadge'), reviewBadge = document.getElementById('reviewBadge');
-  if (cache.pendingCount > 0) {
-    badge.textContent = cache.pendingCount; badge.style.display = 'flex';
-    reviewBadge.textContent = cache.pendingCount; reviewBadge.style.display = 'inline-block';
-  } else { badge.style.display = 'none'; reviewBadge.style.display = 'none'; }
-}
-
-function renderReviewQueue() {
-  const pending = cache.allQuestions.filter(q => q.status === 'pending').sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-  const container = document.getElementById('reviewQueue');
-  if (pending.length === 0) { container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">✅</div><div class="empty-state-text">审核队列为空，所有问题已处理</div></div>'; return; }
-  container.innerHTML = pending.map(q => {
-    const progressHtml = (q.progress || []).map(p => `<span class="card-tag progress">${getProgressIcon(p)} ${getProgressLabel(p)}</span>`).join(' ');
+      </div>`).join('');
+    let statusBadge = '';
+    if (q.status === 'pending') statusBadge = '<span class="card-status pending">PENDING</span>';
+    if (q.status === 'rejected') statusBadge = '<span class="card-status rejected">REJECTED</span>';
     return `
-      <div class="card">
-        <div class="card-header"><span class="card-id">${q.qid}</span><div class="card-meta"><span class="card-status pending">PENDING</span><span class="priority-badge ${q.priority}">${q.priority === 'high' ? '● HIGH' : q.priority === 'medium' ? '● MED' : '● LOW'}</span>${progressHtml}</div></div>
-        <div class="card-body"><div class="card-title">${escapeHtml(q.title)}</div><div class="card-content">${escapeHtml(q.content)}</div></div>
-        <div class="card-footer" style="flex-direction:column;align-items:stretch">
-          <div style="display:flex;justify-content:space-between;width:100%"><span>${formatFullTime(q.created_at)}</span></div>
-          <div class="review-actions">
-            <input type="text" class="review-input" id="reason-${q.id}" placeholder="拒绝理由（仅拒绝时必填）">
-            <button class="btn btn-success" style="padding:8px 16px;font-size:12px;letter-spacing:1px" onclick="reviewApprove('${q.id}')">✓ 通过</button>
-            <button class="btn btn-danger" style="padding:8px 16px;font-size:12px;letter-spacing:1px" onclick="reviewReject('${q.id}')">✗ 拒绝</button>
+      <div class="card ${q.status !== 'approved' ? q.status + '-review' : ''}">
+        <div class="card-header">
+          <span class="card-id" onclick="copyId('${q.qid}')">${q.qid}</span>
+          <div class="card-meta">${statusBadge}<span class="priority-badge ${q.priority}">${q.priority === 'high' ? '● HIGH' : q.priority === 'medium' ? '● MED' : '● LOW'}</span>${progressTags}</div>
+        </div>
+        <div class="card-body">
+          <div class="card-title">${escapeHtml(q.title)}</div>
+          <div class="card-content">${escapeHtml(q.content.substring(0, 180))}${q.content.length > 180 ? '...' : ''}</div>
+          ${q.answers.length > 0 ? `<div class="answers-section"><div style="font-size:11px;color:var(--accent-primary);margin-bottom:8px;font-family:'JetBrains Mono',monospace">▶ ${q.answers.length} 条回答 ${adopted ? '· ✅ 已采纳最佳答案' : ''}</div>${answersHtml}</div>` : ''}
+          ${q.reject_reason ? `<div class="review-reason">📛 拒绝理由：${escapeHtml(q.reject_reason)}</div>` : ''}
+        </div>
+        <div class="card-footer">
+          <span>${formatTime(q.created_at)} · ${adopted ? '✅ 已采纳' : answered ? '💬 已回答' : '⏳ 等待回答'}</span>
+          <div class="card-actions">
+            <button class="card-action-btn" onclick="viewDetail('${q.id}')">查看详情</button>
+            ${q.status === 'approved' ? `<button class="card-action-btn" onclick="openAnswer('${q.id}')">回答</button>` : ''}
+            <button class="card-action-btn" onclick="copyId('${q.qid}')">复制ID</button>
+            ${isOwner && q.status !== 'approved' ? `<button class="card-action-btn danger" onclick="deleteOwnQuestion('${q.id}')">撤回</button>` : ''}
           </div>
         </div>
       </div>`;
-  }).join('');
-}
-
-async function reviewApprove(id) {
-  const { error } = await supabase.from('questions').update({ status: 'approved', reviewed_at: new Date().toISOString(), reject_reason: null }).eq('id', id);
-  if (error) { showNotification('操作失败: ' + error.message, 'error'); return; }
-  showNotification('问题已通过审核并公开');
-  await refreshAllForAdmin(); renderReviewQueue(); renderAdminQuestions(); updateAdminOverview(); updatePendingBadge();
-}
-
-async function reviewReject(id) {
-  const reason = document.getElementById('reason-' + id)?.value.trim();
-  if (!reason) { showNotification('请填写拒绝理由', 'error'); return; }
-  const { error } = await supabase.from('questions').update({ status: 'rejected', reject_reason: reason, reviewed_at: new Date().toISOString() }).eq('id', id);
-  if (error) { showNotification('操作失败: ' + error.message, 'error'); return; }
-  showNotification('问题已拒绝');
-  await refreshAllForAdmin(); renderReviewQueue(); renderAdminQuestions(); updateAdminOverview(); updatePendingBadge();
-}
-
-function renderAdminQuestions() {
-  const search = document.getElementById('adminSearchInput')?.value.toLowerCase() || '';
-  const statusF = document.getElementById('adminStatusFilter')?.value || 'all';
-  let questions = [...cache.allQuestions];
-  if (statusF !== 'all') questions = questions.filter(q => q.status === statusF);
-  if (search) questions = questions.filter(q => q.title.toLowerCase().includes(search) || q.content.toLowerCase().includes(search) || q.qid.toLowerCase().includes(search));
-  questions.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-  const container = document.getElementById('adminQuestionList');
-  if (questions.length === 0) { container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📋</div><div class="empty-state-text">暂无问题</div></div>'; return; }
-  container.innerHTML = questions.map(q => {
-    const progressHtml = (q.progress || []).map(p => `<span class="card-tag progress">${getProgressIcon(p)} ${getProgressLabel(p)}</span>`).join(' ');
-    const statusLabel = { approved: 'APPROVED', pending: 'PENDING', rejected: 'REJECTED' }[q.status];
-    return `
-      <div class="card">
-        <div class="card-header"><span class="card-id">${q.qid}</span><div class="card-meta"><span class="card-status ${q.status}">${statusLabel}</span><span class="priority-badge ${q.priority}">${q.priority === 'high' ? '● HIGH' : q.priority === 'medium' ? '● MED' : '● LOW'}</span>${progressHtml}</div></div>
-        <div class="card-body"><div class="card-title">${escapeHtml(q.title)}</div><div class="card-content">${escapeHtml(q.content.substring(0, 150))}${q.content.length > 150 ? '...' : ''}</div>
-          ${q.reject_reason ? `<div class="review-reason">📛 拒绝理由：${escapeHtml(q.reject_reason)}</div>` : ''}
-          <div style="margin-top:8px;font-size:11px;font-family:'JetBrains Mono',monospace;color:${q.answers.length > 0 ? 'var(--success)' : 'var(--warning)'}">${q.answers.length > 0 ? `✓ ${q.answers.length} 条回答${q.answers.some(a => a.adopted) ? ' · ⭐ 已采纳' : ''}` : '⏳ 暂无回答'}</div>
-        </div>
-        <div class="card-footer"><span>${formatFullTime(q.created_at)}</span><div class="card-actions">
-          ${q.status === 'pending' ? `<button class="card-action-btn success" onclick="reviewApprove('${q.id}')">通过</button>` : ''}
-          ${q.status === 'approved' ? `<button class="card-action-btn" onclick="openAnswer('${q.id}')">回答</button>` : ''}
-          ${q.status === 'rejected' ? `<button class="card-action-btn success" onclick="reviewApprove('${q.id}')">重新通过</button>` : ''}
-          <button class="card-action-btn danger" onclick="adminDeleteQuestion('${q.id}')">删除</button>
-        </div></div>
-      </div>`;
-  }).join('');
-}
-
-async function adminDeleteQuestion(id) {
-  if (!confirm('确定要删除这个问题吗？此操作不可撤销。')) return;
-  const { error } = await supabase.from('questions').delete().eq('id', id);
-  if (error) { showNotification('删除失败: ' + error.message, 'error'); return; }
-  showNotification('问题已删除');
-  await refreshAllForAdmin(); renderAdminQuestions(); renderReviewQueue(); updateAdminOverview(); updatePendingBadge();
-}
-
-function updateAdminOverview() {
-  const all = cache.allQuestions;
-  const total = all.length;
-  const approved = all.filter(q => q.status === 'approved').length;
-  const pending = all.filter(q => q.status === 'pending').length;
-  const rejected = all.filter(q => q.status === 'rejected').length;
-  document.getElementById('admin-stat-total').textContent = total;
-  document.getElementById('admin-stat-approved').textContent = approved;
-  document.getElementById('admin-stat-pending').textContent = pending;
-  document.getElementById('admin-stat-rejected').textContent = rejected;
-  const approvedQ = all.filter(q => q.status === 'approved');
-  const totalAns = approvedQ.reduce((s, q) => s + q.answers.length, 0);
-  const totalAdopt = approvedQ.reduce((s, q) => s + q.answers.filter(a => a.adopted).length, 0);
-  document.getElementById('adminOverview').innerHTML = `
-    <div class="bar-row"><div class="bar-label">审核通过率</div><div class="bar-track"><div class="bar-fill" style="width:${total ? approved / total * 100 : 0}%"></div></div><div class="bar-value">${total ? Math.round(approved / total * 100) : 0}%</div></div>
-    <div class="bar-row"><div class="bar-label">问题回答率</div><div class="bar-track"><div class="bar-fill cyan" style="width:${approvedQ.length ? approvedQ.filter(q => q.answers.length > 0).length / approvedQ.length * 100 : 0}%"></div></div><div class="bar-value cyan">${approvedQ.length ? Math.round(approvedQ.filter(q => q.answers.length > 0).length / approvedQ.length * 100) : 0}%</div></div>
-    <div class="bar-row"><div class="bar-label">答案采纳率</div><div class="bar-track"><div class="bar-fill" style="width:${totalAns ? totalAdopt / totalAns * 100 : 0}%"></div></div><div class="bar-value">${totalAns ? Math.round(totalAdopt / totalAns * 100) : 0}%</div></div>
-    <div style="margin-top:14px;padding:12px;background:var(--bg-primary);font-size:12px;color:var(--text-secondary);line-height:1.8;font-family:'JetBrains Mono',monospace">
-      <div>TOTAL QUESTIONS: <span style="color:var(--accent-primary)">${total}</span></div>
-      <div>TOTAL ANSWERS: <span style="color:var(--accent-cyan)">${totalAns}</span></div>
-      <div>ADOPTED ANSWERS: <span style="color:var(--success)">${totalAdopt}</span></div>
-      <div>REJECTED QUESTIONS: <span style="color:var(--danger)">${rejected}</span></div>
-    </div>`;
-}
-
-async function exportData() {
-  await refreshAllForAdmin();
-  const blob = new Blob([JSON.stringify({ questions: cache.allQuestions, exportedAt: new Date().toISOString() }, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = 'xianr_lab_backup_' + new Date().toISOString().slice(0, 10) + '.json'; a.click();
-  URL.revokeObjectURL(url);
-  showNotification('数据已导出');
-}
-
-async function clearAllData() {
-  if (!confirm('⚠️ 确定要清空所有数据吗？此操作不可撤销！')) return;
-  if (!confirm('再次确认：所有问题和回答将被永久删除！')) return;
-  await supabase.from('answers').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-  await supabase.from('questions').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-  await refreshAllForAdmin(); renderAdminQuestions(); renderReviewQueue(); updateAdminOverview(); updatePendingBadge();
-  showNotification('所有数据已清空');
-}
-
-// ============================================================
-// 时钟 & 初始化
-// ============================================================
-function updateClock() {
-  const now = new Date();
-  document.getElementById('currentTime').textContent = now.toLocaleTimeString('zh-CN', { hour12: false });
-}
-
-async function init() {
-  document.getElementById('sessionId').textContent = getSessionId();
-  updateClock();
-  setInterval(updateClock, 1000);
-  renderProgressGrid();
-  const online = await checkConnection();
-  if (!online) {
-    document.getElementById('questionList').innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">无法连接到 Supabase<br>请检查 ANON_KEY 配置或确认已在 Dashboard 中执行 SQL 初始化脚本</div></div>';
-    return;
   }
-  const { data: { session } } = await supabase.auth.getSession();
-  if (session?.user) {
+
+  // ============================================================
+  // 提交问题
+  // ============================================================
+  window.submitQuestion = async function() {
+    const title = document.getElementById('askTitle').value.trim();
+    const content = document.getElementById('askContent').value.trim();
+    const priority = document.getElementById('askPriority').value;
+    const progress = Array.from(selectedProgress);
+    if (!title) { showNotification('请输入问题标题', 'error'); return; }
+    if (!content) { showNotification('请输入问题详情', 'error'); return; }
+    if (title.length > 100) { showNotification('标题不能超过100个字符', 'error'); return; }
+    if (progress.length === 0) { showNotification('请至少选择一个进度标签', 'error'); return; }
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>提交中...';
+    const qid = generateQid();
+    const { error } = await supabase.from('questions').insert({ qid, title, content, progress, priority, status: 'pending', session_id: getSessionId() });
+    btn.disabled = false; btn.textContent = '提交审核';
+    if (error) { showNotification('提交失败: ' + error.message, 'error'); return; }
+    clearForm(); showNotification('问题已提交，等待管理员审核。ID: ' + qid);
+    await renderMyQuestions(); updatePendingBadge();
+  };
+
+  window.clearForm = function() {
+    document.getElementById('askTitle').value = '';
+    document.getElementById('askContent').value = '';
+    document.getElementById('askPriority').value = 'medium';
+    selectedProgress.clear();
+    renderProgressGrid();
+  };
+
+  async function renderMyQuestions() {
+    await refreshData();
+    const myQ = cache.myQuestions.filter(q => q.session_id === getSessionId());
+    const container = document.getElementById('myQuestions');
+    if (myQ.length === 0) { container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📝</div><div class="empty-state-text">你还没有提过问题</div></div>'; return; }
+    container.innerHTML = myQ.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).map(q => renderQuestionCard(q)).join('');
+  }
+
+  window.deleteOwnQuestion = async function(id) {
+    if (!confirm('确定撤回这个问题吗？')) return;
+    const { data, error } = await supabase.rpc('delete_own_question', { p_question_id: id, my_session: getSessionId() });
+    if (error) { showNotification('撤回失败: ' + error.message, 'error'); return; }
+    if (data) { showNotification('问题已撤回'); await renderMyQuestions(); await renderQuestions(); }
+    else showNotification('撤回失败（仅允许撤回未通过的问题）', 'error');
+  };
+
+  // ============================================================
+  // 回答
+  // ============================================================
+  window.openAnswer = async function(qid) {
+    currentAnswerQuestionId = qid;
+    const q = cache.myQuestions.find(q => q.id === qid) || cache.approvedQuestions.find(q => q.id === qid) || cache.allQuestions.find(q => q.id === qid);
+    if (!q) return;
+    document.getElementById('answerQuestionPreview').innerHTML = `<strong>${escapeHtml(q.title)}</strong><br><span style="font-size:12px;color:var(--text-dim)">${escapeHtml(q.content.substring(0, 200))}</span>`;
+    document.getElementById('answerContent').value = '';
+    document.getElementById('answerNickname').value = '';
+    document.getElementById('answerModal').classList.add('active');
+  };
+
+  window.submitAnswer = async function() {
+    const content = document.getElementById('answerContent').value.trim();
+    const nickname = document.getElementById('answerNickname').value.trim();
+    if (!content) { showNotification('请输入回答内容', 'error'); return; }
+    const btn = document.getElementById('submitAnswerBtn');
+    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>提交中...';
+    const { error } = await supabase.from('answers').insert({ question_id: currentAnswerQuestionId, aid: generateAid(), content, nickname: nickname || '匿名', adopted: false });
+    btn.disabled = false; btn.textContent = '提交回答';
+    if (error) { showNotification('提交失败: ' + error.message, 'error'); return; }
+    closeModal('answerModal'); showNotification('回答提交成功！');
+    await refreshData(); renderQuestionsList(); await renderMyQuestions();
+  };
+
+  window.adoptAnswer = async function(qid, aid) {
+    if (!confirm('确定采纳这条回答为最佳答案吗？采纳后不可更改。')) return;
+    const { data, error } = await supabase.rpc('adopt_answer', { p_answer_id: aid, my_session: getSessionId() });
+    if (error) { showNotification('采纳失败: ' + error.message, 'error'); return; }
+    if (data) {
+      showNotification('已采纳该回答！');
+      await refreshData(); renderQuestionsList(); await renderMyQuestions();
+      if (document.getElementById('detailModal').classList.contains('active')) viewDetail(qid);
+    } else showNotification('采纳失败（仅提问者可操作）', 'error');
+  };
+
+  async function viewDetail(qid) {
+    currentDetailQuestionId = qid;
+    const q = cache.myQuestions.find(q => q.id === qid) || cache.approvedQuestions.find(q => q.id === qid) || cache.allQuestions.find(q => q.id === qid);
+    if (!q) return;
+    const isOwner = q.session_id === getSessionId(), adopted = q.answers.some(a => a.adopted);
+    const progressHtml = (q.progress || []).map(p => `<span class="card-tag progress">${getProgressIcon(p)} ${getProgressLabel(p)}</span>`).join(' ');
+    const answersHtml = q.answers.length > 0 ? q.answers.map(a => `
+      <div class="answer-item ${a.adopted ? 'adopted' : ''}">
+        <div>${escapeHtml(a.content)}${a.adopted ? '<span class="adopted-badge">✓ 已采纳</span>' : ''}</div>
+        <div class="answer-meta">
+          <span>— ${a.nickname || '匿名'} · ${formatFullTime(a.created_at)}</span>
+          ${isOwner && !adopted && q.status === 'approved' ? `<button class="card-action-btn success" onclick="adoptAnswer('${q.id}','${a.id}')">采纳</button>` : ''}
+        </div>
+      </div>`).join('') : '<div style="color:var(--text-dim);font-size:13px;padding:12px">暂无回答，成为第一个回答者吧！</div>';
+    document.getElementById('detailContent').innerHTML = `
+      <div style="margin-bottom:12px;display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+        <span class="card-id">${q.qid}</span>
+        <span class="priority-badge ${q.priority}">${q.priority === 'high' ? '● HIGH' : q.priority === 'medium' ? '● MED' : '● LOW'}</span>
+        ${progressHtml}
+      </div>
+      <h3 style="font-size:18px;margin-bottom:14px;line-height:1.6">${escapeHtml(q.title)}</h3>
+      <p style="font-size:14px;color:var(--text-secondary);line-height:1.9;white-space:pre-wrap;margin-bottom:18px">${escapeHtml(q.content)}</p>
+      <div style="font-size:11px;color:var(--text-dim);font-family:'JetBrains Mono',monospace">📅 ${formatFullTime(q.created_at)}</div>
+      <div class="decor-line"></div>
+      <h4 style="font-size:13px;color:var(--accent-primary);margin-bottom:12px;letter-spacing:2px">回答 (${q.answers.length})</h4>
+      ${answersHtml}`;
+    document.getElementById('detailAnswerBtn').style.display = q.status === 'approved' ? '' : 'none';
+    document.getElementById('detailModal').classList.add('active');
+  }
+
+  window.openAnswerFromDetail = function() { closeModal('detailModal'); setTimeout(() => openAnswer(currentDetailQuestionId), 300); };
+  window.copyId = function(id) {
+    navigator.clipboard.writeText(id).then(() => {
+      const toast = document.getElementById('copyToast'); toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    });
+  };
+  window.closeModal = function(id) { document.getElementById(id).classList.remove('active'); };
+
+  // ============================================================
+  // 数据统计
+  // ============================================================
+  async function renderStatsPage() {
+    await refreshData();
+    const approved = cache.approvedQuestions;
+    const totalAnswers = approved.reduce((s, q) => s + q.answers.length, 0);
+    const adoptedQ = approved.filter(q => q.answers.some(a => a.adopted)).length;
+    const totalAdopted = approved.reduce((s, q) => s + q.answers.filter(a => a.adopted).length, 0);
+    document.getElementById('stats-total-q').textContent = approved.length;
+    document.getElementById('stats-total-a').textContent = totalAnswers;
+    document.getElementById('stats-adopted').textContent = totalAdopted;
+    document.getElementById('stats-rate').textContent = approved.length ? Math.round(adoptedQ / approved.length * 100) + '%' : '0%';
+
+    const progressCounts = {};
+    PROGRESS_TAGS.forEach(t => progressCounts[t.id] = 0);
+    approved.forEach(q => (q.progress || []).forEach(p => progressCounts[p] = (progressCounts[p] || 0) + 1));
+    const maxProg = Math.max(...Object.values(progressCounts), 1);
+    document.getElementById('progressStats').innerHTML = PROGRESS_TAGS.filter(t => progressCounts[t.id] > 0).map(t => `
+      <div class="bar-row"><div class="bar-label">${t.icon} ${t.label}</div><div class="bar-track"><div class="bar-fill cyan" style="width:${progressCounts[t.id] / maxProg * 100}%"></div></div><div class="bar-value cyan">${progressCounts[t.id]}</div></div>`).join('') || '<div style="color:var(--text-dim);font-size:12px">暂无数据</div>';
+
+    const priCounts = { high: 0, medium: 0, low: 0 };
+    approved.forEach(q => priCounts[q.priority]++);
+    const maxPri = Math.max(...Object.values(priCounts), 1);
+    document.getElementById('priorityStats').innerHTML = Object.entries(priCounts).map(([k, v]) => `
+      <div class="bar-row"><div class="bar-label">${k === 'high' ? '🔴 高' : k === 'medium' ? '🟠 中' : '🟢 低'}</div><div class="bar-track"><div class="bar-fill" style="width:${v / maxPri * 100}%"></div></div><div class="bar-value">${v}</div></div>`).join('');
+
+    let reviewCounts = { approved: 0, pending: 0, rejected: 0 };
+    const rcRes = await supabase.rpc('get_pending_count');
+    reviewCounts.pending = rcRes.data || 0;
+    reviewCounts.approved = approved.length;
+    const rejRes = await supabase.from('questions').select('id', { count: 'exact', head: true }).eq('status', 'rejected');
+    reviewCounts.rejected = rejRes.count || 0;
+    renderDonut(reviewCounts);
+
+    const helperStats = {};
+    approved.forEach(q => q.answers.forEach(a => {
+      const name = a.nickname || '匿名';
+      if (!helperStats[name]) helperStats[name] = { count: 0, adopted: 0 };
+      helperStats[name].count++;
+      if (a.adopted) helperStats[name].adopted++;
+    }));
+    const topHelpers = Object.entries(helperStats).sort((a, b) => b[1].count - a[1].count).slice(0, 5);
+    document.getElementById('helperRank').innerHTML = topHelpers.length ? topHelpers.map(([name, s], i) => `
+      <li class="rank-item"><span class="rank-pos">#${i + 1}</span><span class="rank-name">${escapeHtml(name)}${s.adopted > 0 ? ` <span style="color:var(--success);font-size:11px">✓${s.adopted}</span>` : ''}</span><span class="rank-count">${s.count}条</span></li>`).join('') : '<div style="color:var(--text-dim);font-size:12px;padding:12px 0">暂无回答数据</div>';
+
+    renderTimeline();
+
+    const adoptionByProgress = {};
+    approved.forEach(q => { (q.progress || []).forEach(p => {
+      if (!adoptionByProgress[p]) adoptionByProgress[p] = { total: 0, adopted: 0 };
+      adoptionByProgress[p].total++;
+      if (q.answers.some(a => a.adopted)) adoptionByProgress[p].adopted++;
+    }); });
+    document.getElementById('adoptionStats').innerHTML = Object.keys(adoptionByProgress).length ? Object.entries(adoptionByProgress).map(([p, s]) => `
+      <div class="bar-row"><div class="bar-label">${getProgressIcon(p)} ${getProgressLabel(p)}</div><div class="bar-track"><div class="bar-fill" style="width:${s.total ? s.adopted / s.total * 100 : 0}%"></div></div><div class="bar-value">${s.adopted}/${s.total}</div></div>`).join('') : '<div style="color:var(--text-dim);font-size:12px">暂无采纳数据</div>';
+
+    const multiAnsQ = approved.filter(q => q.answers.length > 1).length;
+    const oneAnsQ = approved.filter(q => q.answers.length === 1).length;
+    const zeroAnsQ = approved.filter(q => q.answers.length === 0).length;
+    const maxA = Math.max(multiAnsQ, oneAnsQ, zeroAnsQ, 1);
+    document.getElementById('answerAnalysis').innerHTML = `
+      <div class="bar-row"><div class="bar-label">多回答 (≥2)</div><div class="bar-track"><div class="bar-fill" style="width:${multiAnsQ / maxA * 100}%"></div></div><div class="bar-value">${multiAnsQ}</div></div>
+      <div class="bar-row"><div class="bar-label">单回答 (=1)</div><div class="bar-track"><div class="bar-fill cyan" style="width:${oneAnsQ / maxA * 100}%"></div></div><div class="bar-value cyan">${oneAnsQ}</div></div>
+      <div class="bar-row"><div class="bar-label">零回答 (=0)</div><div class="bar-track"><div class="bar-fill" style="width:${zeroAnsQ / maxA * 100}%;background:linear-gradient(90deg,rgba(208,64,64,0.5),var(--danger))"></div></div><div class="bar-value" style="color:var(--danger)">${zeroAnsQ}</div></div>
+      <div style="margin-top:16px;padding-top:12px;border-top:1px dashed var(--border-color);font-size:12px;color:var(--text-secondary);line-height:1.7">
+        <div>📊 平均每问题回答数：<span style="color:var(--accent-primary);font-family:'JetBrains Mono',monospace">${approved.length ? (totalAnswers / approved.length).toFixed(2) : 0}</span></div>
+        <div>⭐ 平均每条回答采纳率：<span style="color:var(--accent-primary);font-family:'JetBrains Mono',monospace">${totalAnswers ? (totalAdopted / totalAnswers * 100).toFixed(1) + '%' : '0%'}</span></div>
+      </div>`;
+  }
+
+  function renderDonut(counts) {
+    const total = counts.approved + counts.pending + counts.rejected;
+    if (total === 0) { document.getElementById('reviewDonut').innerHTML = '<div style="color:var(--text-dim);font-size:12px">暂无数据</div>'; return; }
+    const colors = { approved: '#40b070', pending: '#a070d0', rejected: '#d04040' };
+    const labels = { approved: '已通过', pending: '待审核', rejected: '已拒绝' };
+    let offset = 0;
+    const radius = 40, circ = 2 * Math.PI * radius;
+    const segments = Object.entries(counts).filter(([k, v]) => v > 0).map(([k, v]) => {
+      const len = (v / total) * circ;
+      const seg = `<circle cx="60" cy="60" r="${radius}" fill="none" stroke="${colors[k]}" stroke-width="14" stroke-dasharray="${len} ${circ - len}" stroke-dashoffset="${-offset}" transform="rotate(-90 60 60)"/>`;
+      offset += len;
+      return seg;
+    });
+    document.getElementById('reviewDonut').innerHTML = `
+      <svg class="donut-svg" width="120" height="120" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="${radius}" fill="none" stroke="var(--bg-primary)" stroke-width="14"/>
+        ${segments.join('')}
+        <text x="60" y="58" text-anchor="middle" fill="var(--accent-primary)" font-size="18" font-weight="700" font-family="JetBrains Mono">${total}</text>
+        <text x="60" y="74" text-anchor="middle" fill="var(--text-dim)" font-size="8" font-family="JetBrains Mono">TOTAL</text>
+      </svg>
+      <div class="donut-legend">
+        ${Object.entries(counts).map(([k, v]) => `<div class="legend-item"><div class="legend-dot" style="background:${colors[k]}"></div><div class="legend-label">${labels[k]}</div><div class="legend-value">${v} <span style="color:var(--text-dim);font-size:10px">(${total ? Math.round(v / total * 100) : 0}%)</span></div></div>`).join('')}
+      </div>`;
+  }
+
+  function renderTimeline() {
+    const approved = cache.approvedQuestions;
+    const days = [], counts = [];
+    const now = new Date(); now.setHours(0, 0, 0, 0);
+    for (let i = 13; i >= 0; i--) {
+      const d = new Date(now); d.setDate(d.getDate() - i); days.push(d);
+      counts.push(approved.filter(q => new Date(q.created_at).toDateString() === d.toDateString()).length);
+    }
+    const max = Math.max(...counts, 1);
+    document.getElementById('timelineChart').innerHTML = counts.map((c, i) => `<div class="timeline-bar" style="height:${c ? (c / max * 100) : 3}%"></div>`).join('');
+    document.getElementById('timelineLabels').innerHTML = days.map((d, i) => {
+      if (i % 2 === 0 || i === days.length - 1) return `<span style="flex:1;text-align:center">${d.getMonth() + 1}/${d.getDate()}</span>`;
+      return '<span style="flex:1"></span>';
+    }).join('');
+  }
+
+  // ============================================================
+  // 管理员
+  // ============================================================
+  window.adminLogin_fn = async function() {
+    const email = document.getElementById('adminEmail').value.trim();
+    const password = document.getElementById('adminPassword').value;
+    if (!email || !password) { showNotification('请输入邮箱和密码', 'error'); return; }
+    const btn = document.getElementById('loginBtn');
+    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>登录中...';
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    btn.disabled = false; btn.textContent = '登录';
+    if (error) { showNotification('登录失败: ' + error.message, 'error'); return; }
     cache.isAdmin = true;
     document.getElementById('adminLogin').style.display = 'none';
     document.getElementById('adminPanel').style.display = 'block';
-    document.getElementById('adminEmailDisplay').textContent = session.user.email;
-  }
-  await renderQuestions();
-  supabase.channel('qa_changes')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'questions' }, () => { if (document.getElementById('page-home').classList.contains('active')) renderQuestions(); updatePendingBadge(); })
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'answers' }, () => { if (document.getElementById('page-home').classList.contains('active')) renderQuestions(); })
-    .subscribe();
-  setInterval(async () => {
-    const pRes = await supabase.rpc('get_pending_count').catch(() => ({ data: 0 }));
-    cache.pendingCount = pRes.data || 0;
-    updatePendingBadge();
-  }, 30000);
-  document.querySelectorAll('.modal-overlay').forEach(overlay => {
-    overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('active'); });
-  });
-}
+    document.getElementById('adminEmailDisplay').textContent = email;
+    await refreshAllForAdmin();
+    renderReviewQueue(); renderAdminQuestions(); updateAdminOverview();
+    showNotification('管理员登录成功');
+  };
 
-init();
+  window.adminLogout = async function() {
+    await supabase.auth.signOut();
+    cache.isAdmin = false; cache.allQuestions = [];
+    document.getElementById('adminLogin').style.display = 'block';
+    document.getElementById('adminPanel').style.display = 'none';
+    document.getElementById('adminEmail').value = '';
+    document.getElementById('adminPassword').value = '';
+    showNotification('已退出管理员');
+  };
+
+  window.switchAdminTab = function(tab, event) {
+    document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById('admin-tab-' + tab).classList.add('active');
+  };
+
+  function updatePendingBadge() {
+    const badge = document.getElementById('pendingBadge'), reviewBadge = document.getElementById('reviewBadge');
+    if (cache.pendingCount > 0) {
+      badge.textContent = cache.pendingCount; badge.style.display = 'flex';
+      reviewBadge.textContent = cache.pendingCount; reviewBadge.style.display = 'inline-block';
+    } else { badge.style.display = 'none'; reviewBadge.style.display = 'none'; }
+  }
+
+  function renderReviewQueue() {
+    const pending = cache.allQuestions.filter(q => q.status === 'pending').sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    const container = document.getElementById('reviewQueue');
+    if (pending.length === 0) { container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">✅</div><div class="empty-state-text">审核队列为空，所有问题已处理</div></div>'; return; }
+    container.innerHTML = pending.map(q => {
+      const progressHtml = (q.progress || []).map(p => `<span class="card-tag progress">${getProgressIcon(p)} ${getProgressLabel(p)}</span>`).join(' ');
+      return `
+        <div class="card">
+          <div class="card-header"><span class="card-id">${q.qid}</span><div class="card-meta"><span class="card-status pending">PENDING</span><span class="priority-badge ${q.priority}">${q.priority === 'high' ? '● HIGH' : q.priority === 'medium' ? '● MED' : '● LOW'}</span>${progressHtml}</div></div>
+          <div class="card-body"><div class="card-title">${escapeHtml(q.title)}</div><div class="card-content">${escapeHtml(q.content)}</div></div>
+          <div class="card-footer" style="flex-direction:column;align-items:stretch">
+            <div style="display:flex;justify-content:space-between;width:100%"><span>${formatFullTime(q.created_at)}</span></div>
+            <div class="review-actions">
+              <input type="text" class="review-input" id="reason-${q.id}" placeholder="拒绝理由（仅拒绝时必填）">
+              <button class="btn btn-success" style="padding:8px 16px;font-size:12px;letter-spacing:1px" onclick="reviewApprove('${q.id}')">✓ 通过</button>
+              <button class="btn btn-danger" style="padding:8px 16px;font-size:12px;letter-spacing:1px" onclick="reviewReject('${q.id}')">✗ 拒绝</button>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  window.reviewApprove = async function(id) {
+    const { error } = await supabase.from('questions').update({ status: 'approved', reviewed_at: new Date().toISOString(), reject_reason: null }).eq('id', id);
+    if (error) { showNotification('操作失败: ' + error.message, 'error'); return; }
+    showNotification('问题已通过审核并公开');
+    await refreshAllForAdmin(); renderReviewQueue(); renderAdminQuestions(); updateAdminOverview(); updatePendingBadge();
+  };
+
+  window.reviewReject = async function(id) {
+    const reason = document.getElementById('reason-' + id)?.value.trim();
+    if (!reason) { showNotification('请填写拒绝理由', 'error'); return; }
+    const { error } = await supabase.from('questions').update({ status: 'rejected', reject_reason: reason, reviewed_at: new Date().toISOString() }).eq('id', id);
+    if (error) { showNotification('操作失败: ' + error.message, 'error'); return; }
+    showNotification('问题已拒绝');
+    await refreshAllForAdmin(); renderReviewQueue(); renderAdminQuestions(); updateAdminOverview(); updatePendingBadge();
+  };
+
+  function renderAdminQuestions() {
+    const search = document.getElementById('adminSearchInput')?.value.toLowerCase() || '';
+    const statusF = document.getElementById('adminStatusFilter')?.value || 'all';
+    let questions = [...cache.allQuestions];
+    if (statusF !== 'all') questions = questions.filter(q => q.status === statusF);
+    if (search) questions = questions.filter(q => q.title.toLowerCase().includes(search) || q.content.toLowerCase().includes(search) || q.qid.toLowerCase().includes(search));
+    questions.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    const container = document.getElementById('adminQuestionList');
+    if (questions.length === 0) { container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📋</div><div class="empty-state-text">暂无问题</div></div>'; return; }
+    container.innerHTML = questions.map(q => {
+      const progressHtml = (q.progress || []).map(p => `<span class="card-tag progress">${getProgressIcon(p)} ${getProgressLabel(p)}</span>`).join(' ');
+      const statusLabel = { approved: 'APPROVED', pending: 'PENDING', rejected: 'REJECTED' }[q.status];
+      return `
+        <div class="card">
+          <div class="card-header"><span class="card-id">${q.qid}</span><div class="card-meta"><span class="card-status ${q.status}">${statusLabel}</span><span class="priority-badge ${q.priority}">${q.priority === 'high' ? '● HIGH' : q.priority === 'medium' ? '● MED' : '● LOW'}</span>${progressHtml}</div></div>
+          <div class="card-body"><div class="card-title">${escapeHtml(q.title)}</div><div class="card-content">${escapeHtml(q.content.substring(0, 150))}${q.content.length > 150 ? '...' : ''}</div>
+            ${q.reject_reason ? `<div class="review-reason">📛 拒绝理由：${escapeHtml(q.reject_reason)}</div>` : ''}
+            <div style="margin-top:8px;font-size:11px;font-family:'JetBrains Mono',monospace;color:${q.answers.length > 0 ? 'var(--success)' : 'var(--warning)'}">${q.answers.length > 0 ? `✓ ${q.answers.length} 条回答${q.answers.some(a => a.adopted) ? ' · ⭐ 已采纳' : ''}` : '⏳ 暂无回答'}</div>
+          </div>
+          <div class="card-footer"><span>${formatFullTime(q.created_at)}</span><div class="card-actions">
+            ${q.status === 'pending' ? `<button class="card-action-btn success" onclick="reviewApprove('${q.id}')">通过</button>` : ''}
+            ${q.status === 'approved' ? `<button class="card-action-btn" onclick="openAnswer('${q.id}')">回答</button>` : ''}
+            ${q.status === 'rejected' ? `<button class="card-action-btn success" onclick="reviewApprove('${q.id}')">重新通过</button>` : ''}
+            <button class="card-action-btn danger" onclick="adminDeleteQuestion('${q.id}')">删除</button>
+          </div></div>
+        </div>`;
+    }).join('');
+  }
+
+  window.adminDeleteQuestion = async function(id) {
+    if (!confirm('确定要删除这个问题吗？此操作不可撤销。')) return;
+    const { error } = await supabase.from('questions').delete().eq('id', id);
+    if (error) { showNotification('删除失败: ' + error.message, 'error'); return; }
+    showNotification('问题已删除');
+    await refreshAllForAdmin(); renderAdminQuestions(); renderReviewQueue(); updateAdminOverview(); updatePendingBadge();
+  };
+
+  function updateAdminOverview() {
+    const all = cache.allQuestions;
+    const total = all.length;
+    const approved = all.filter(q => q.status === 'approved').length;
+    const pending = all.filter(q => q.status === 'pending').length;
+    const rejected = all.filter(q => q.status === 'rejected').length;
+    document.getElementById('admin-stat-total').textContent = total;
+    document.getElementById('admin-stat-approved').textContent = approved;
+    document.getElementById('admin-stat-pending').textContent = pending;
+    document.getElementById('admin-stat-rejected').textContent = rejected;
+    const approvedQ = all.filter(q => q.status === 'approved');
+    const totalAns = approvedQ.reduce((s, q) => s + q.answers.length, 0);
+    const totalAdopt = approvedQ.reduce((s, q) => s + q.answers.filter(a => a.adopted).length, 0);
+    document.getElementById('adminOverview').innerHTML = `
+      <div class="bar-row"><div class="bar-label">审核通过率</div><div class="bar-track"><div class="bar-fill" style="width:${total ? approved / total * 100 : 0}%"></div></div><div class="bar-value">${total ? Math.round(approved / total * 100) : 0}%</div></div>
+      <div class="bar-row"><div class="bar-label">问题回答率</div><div class="bar-track"><div class="bar-fill cyan" style="width:${approvedQ.length ? approvedQ.filter(q => q.answers.length > 0).length / approvedQ.length * 100 : 0}%"></div></div><div class="bar-value cyan">${approvedQ.length ? Math.round(approvedQ.filter(q => q.answers.length > 0).length / approvedQ.length * 100) : 0}%</div></div>
+      <div class="bar-row"><div class="bar-label">答案采纳率</div><div class="bar-track"><div class="bar-fill" style="width:${totalAns ? totalAdopt / totalAns * 100 : 0}%"></div></div><div class="bar-value">${totalAns ? Math.round(totalAdopt / totalAns * 100) : 0}%</div></div>
+      <div style="margin-top:14px;padding:12px;background:var(--bg-primary);font-size:12px;color:var(--text-secondary);line-height:1.8;font-family:'JetBrains Mono',monospace">
+        <div>TOTAL QUESTIONS: <span style="color:var(--accent-primary)">${total}</span></div>
+        <div>TOTAL ANSWERS: <span style="color:var(--accent-cyan)">${totalAns}</span></div>
+        <div>ADOPTED ANSWERS: <span style="color:var(--success)">${totalAdopt}</span></div>
+        <div>REJECTED QUESTIONS: <span style="color:var(--danger)">${rejected}</span></div>
+      </div>`;
+  }
+
+  window.exportData = async function() {
+    await refreshAllForAdmin();
+    const blob = new Blob([JSON.stringify({ questions: cache.allQuestions, exportedAt: new Date().toISOString() }, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = 'xianr_lab_backup_' + new Date().toISOString().slice(0, 10) + '.json'; a.click();
+    URL.revokeObjectURL(url);
+    showNotification('数据已导出');
+  };
+
+  window.clearAllData = async function() {
+    if (!confirm('⚠️ 确定要清空所有数据吗？此操作不可撤销！')) return;
+    if (!confirm('再次确认：所有问题和回答将被永久删除！')) return;
+    await supabase.from('answers').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+    await supabase.from('questions').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+    await refreshAllForAdmin(); renderAdminQuestions(); renderReviewQueue(); updateAdminOverview(); updatePendingBadge();
+    showNotification('所有数据已清空');
+  };
+
+  // ============================================================
+  // 时钟 & 初始化
+  // ============================================================
+  function updateClock() {
+    const now = new Date();
+    document.getElementById('currentTime').textContent = now.toLocaleTimeString('zh-CN', { hour12: false });
+  }
+
+  async function init() {
+    document.getElementById('sessionId').textContent = getSessionId();
+    updateClock();
+    setInterval(updateClock, 1000);
+    renderProgressGrid();
+    const online = await checkConnection();
+    if (!online) {
+      document.getElementById('questionList').innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">无法连接到 Supabase<br>请检查 ANON_KEY 配置或确认已在 Dashboard 中执行 SQL 初始化脚本</div></div>';
+      return;
+    }
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user) {
+      cache.isAdmin = true;
+      document.getElementById('adminLogin').style.display = 'none';
+      document.getElementById('adminPanel').style.display = 'block';
+      document.getElementById('adminEmailDisplay').textContent = session.user.email;
+    }
+    await renderQuestions();
+    supabase.channel('qa_changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'questions' }, () => { if (document.getElementById('page-home').classList.contains('active')) renderQuestions(); updatePendingBadge(); })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'answers' }, () => { if (document.getElementById('page-home').classList.contains('active')) renderQuestions(); })
+      .subscribe();
+    setInterval(async () => {
+      const pRes = await supabase.rpc('get_pending_count').catch(() => ({ data: 0 }));
+      cache.pendingCount = pRes.data || 0;
+      updatePendingBadge();
+    }, 30000);
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('active'); });
+    });
+  }
+
+  init();
+})();
 </script>
 </body>
 </html>
