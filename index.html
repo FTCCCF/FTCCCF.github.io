@@ -1,13 +1,3 @@
-这个问题是因为 JavaScript 代码中的变量 `supabase` 被重复声明了。这通常发生在以下情况：
-1.  **代码重复粘贴**：你可能在文件中不小心粘贴了两次代码，或者在旧的代码下面粘贴了新的。
-2.  **浏览器/插件冲突**：某些浏览器插件或 Edge 的自动翻译功能可能会重复执行脚本。
-3.  **全局作用域冲突**：之前的版本中 `const supabase` 定义在全局作用域，如果页面重新加载或脚本执行两次就会报错。
-
-**解决方法：** 我将整个 JavaScript 代码包裹在一个立即执行函数 `(function(){ ... })();` 中，这样可以将所有变量变成局部变量，避免与全局环境或其他脚本冲突。同时我也确保了你提供的 Supabase 密钥配置正确。
-
-请直接复制下面的完整代码覆盖你的 `index.html`：
-
-```html
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -18,6 +8,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5.0.0/index.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
+/* 此处保留所有 CSS 样式不变，省略以节省篇幅，请确保样式部分完整 */
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg-primary:#08090d;--bg-secondary:#11131c;--bg-tertiary:#1a1d2b;--accent-primary:#e8b440;--accent-secondary:#f5cc60;--accent-dim:#8a6a20;--accent-cyan:#3fd4d4;--accent-cyan-dim:#1a5f5f;--text-primary:#e8e8e0;--text-secondary:#a0a098;--text-dim:#606058;--border-color:#2a2d3e;--border-light:#3a3d4e;--danger:#d04040;--success:#40b070;--warning:#e89040;--pending:#a070d0}
 body{font-family:'Noto Sans SC',sans-serif;background:var(--bg-primary);color:var(--text-primary);min-height:100vh;overflow-x:hidden}
@@ -239,7 +230,6 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
 </header>
 
 <main class="main">
-
   <div class="page active" id="page-home">
     <div class="hero">
       <div class="hero-tag">// OPEN_SOURCE_CHIP_DESIGN</div>
@@ -535,7 +525,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
   async function checkConnection() {
     const dot = document.getElementById('statusDot'), label = document.getElementById('connStatus');
     try {
-      const { error } = await supabase.rpc('get_pending_count');
+      const { data, error } = await supabase.rpc('get_pending_count');
       if (error && error.code !== '42883') throw error;
       dot.classList.remove('offline');
       label.textContent = 'SYS_ONLINE';
@@ -547,16 +537,22 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
     }
   }
 
+  // ✅ 修复：移除了 Promise.all 中的 .catch()，改为顺序 await
   async function refreshData() {
     const session = getSessionId();
-    const [qRes, pRes] = await Promise.all([
-      supabase.rpc('get_my_questions', { my_session: session }),
-      supabase.rpc('get_pending_count').catch(() => ({ data: 0, error: null }))
-    ]);
-    if (qRes.error) { console.error('fetch questions:', qRes.error); showNotification('数据加载失败: ' + qRes.error.message, 'error'); return false; }
+    const qRes = await supabase.rpc('get_my_questions', { my_session: session });
+    const pRes = await supabase.rpc('get_pending_count');
+
+    if (qRes.error) { 
+      console.error('fetch questions:', qRes.error); 
+      showNotification('数据加载失败: ' + qRes.error.message, 'error'); 
+      return false; 
+    }
+    
     const questions = qRes.data || [];
     const qids = questions.map(q => q.id);
     let answersByQ = {};
+    
     if (qids.length > 0) {
       const aRes = await supabase.from('answers').select('*').in('question_id', qids).order('created_at', { ascending: true });
       if (!aRes.error && aRes.data) {
@@ -750,12 +746,22 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
     if (!content) { showNotification('请输入问题详情', 'error'); return; }
     if (title.length > 100) { showNotification('标题不能超过100个字符', 'error'); return; }
     if (progress.length === 0) { showNotification('请至少选择一个进度标签', 'error'); return; }
+    
     const btn = document.getElementById('submitBtn');
     btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>提交中...';
+    
     const qid = generateQid();
-    const { error } = await supabase.from('questions').insert({ qid, title, content, progress, priority, status: 'pending', session_id: getSessionId() });
+    const id = crypto.randomUUID(); // ✅ 修复：显式生成 id 以匹配 SQL DEFAULT gen_random_uuid() 或防止报错
+    
+    const { error } = await supabase.from('questions').insert({ 
+      id, // ✅ 显式传递 id
+      qid, title, content, progress, priority, 
+      status: 'pending', session_id: getSessionId() 
+    });
+    
     btn.disabled = false; btn.textContent = '提交审核';
     if (error) { showNotification('提交失败: ' + error.message, 'error'); return; }
+    
     clearForm(); showNotification('问题已提交，等待管理员审核。ID: ' + qid);
     await renderMyQuestions(); updatePendingBadge();
   };
@@ -803,7 +809,12 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
     if (!content) { showNotification('请输入回答内容', 'error'); return; }
     const btn = document.getElementById('submitAnswerBtn');
     btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>提交中...';
-    const { error } = await supabase.from('answers').insert({ question_id: currentAnswerQuestionId, aid: generateAid(), content, nickname: nickname || '匿名', adopted: false });
+    const id = crypto.randomUUID(); // ✅ 修复：生成 id
+    const { error } = await supabase.from('answers').insert({ 
+      id, // ✅ 显式传递 id
+      question_id: currentAnswerQuestionId, 
+      aid: generateAid(), content, nickname: nickname || '匿名', adopted: false 
+    });
     btn.disabled = false; btn.textContent = '提交回答';
     if (error) { showNotification('提交失败: ' + error.message, 'error'); return; }
     closeModal('answerModal'); showNotification('回答提交成功！');
@@ -1167,7 +1178,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
       .on('postgres_changes', { event: '*', schema: 'public', table: 'answers' }, () => { if (document.getElementById('page-home').classList.contains('active')) renderQuestions(); })
       .subscribe();
     setInterval(async () => {
-      const pRes = await supabase.rpc('get_pending_count').catch(() => ({ data: 0 }));
+      const pRes = await supabase.rpc('get_pending_count');
       cache.pendingCount = pRes.data || 0;
       updatePendingBadge();
     }, 30000);
@@ -1181,4 +1192,4 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
 </script>
 </body>
 </html>
-```
+
