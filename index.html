@@ -3,13 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" type="image/png" href="logo.png">
 <title>先研实验室问答平台 · 一生一芯项目</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-sc@5.0.0/index.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5.0.0/index.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-/* 此处保留所有 CSS 样式不变，省略以节省篇幅，请确保样式部分完整 */
+/* 基础样式保持不变，省略部分重复CSS以节省空间，请确保保留原有所有CSS */
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg-primary:#08090d;--bg-secondary:#11131c;--bg-tertiary:#1a1d2b;--accent-primary:#e8b440;--accent-secondary:#f5cc60;--accent-dim:#8a6a20;--accent-cyan:#3fd4d4;--accent-cyan-dim:#1a5f5f;--text-primary:#e8e8e0;--text-secondary:#a0a098;--text-dim:#606058;--border-color:#2a2d3e;--border-light:#3a3d4e;--danger:#d04040;--success:#40b070;--warning:#e89040;--pending:#a070d0}
 body{font-family:'Noto Sans SC',sans-serif;background:var(--bg-primary);color:var(--text-primary);min-height:100vh;overflow-x:hidden}
@@ -58,8 +57,8 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
 .stat-card::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:2px;background:var(--accent-primary);opacity:0.3}
 .stat-card:nth-child(2)::after{background:var(--accent-cyan)}.stat-card:nth-child(3)::after{background:var(--warning)}.stat-card:nth-child(4)::after{background:var(--success)}
 .filter-bar{background:var(--bg-secondary);border:1px solid var(--border-color);padding:18px 20px;margin-bottom:20px;display:grid;grid-template-columns:1fr 180px;gap:12px;align-items:center;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px))}
-.search-input,.priority-select,.status-select,.review-input{width:100%;padding:11px 16px;background:var(--bg-primary);border:1px solid var(--border-color);color:var(--text-primary);font-size:13px;font-family:'Noto Sans SC',sans-serif;outline:none;transition:all 0.3s}
-.search-input:focus,.priority-select:focus,.status-select:focus,.review-input:focus{border-color:var(--accent-primary)}
+.search-input,.priority-select,.status-select,.review-input,.student-input{width:100%;padding:11px 16px;background:var(--bg-primary);border:1px solid var(--border-color);color:var(--text-primary);font-size:13px;font-family:'Noto Sans SC',sans-serif;outline:none;transition:all 0.3s}
+.search-input:focus,.priority-select:focus,.status-select:focus,.review-input:focus,.student-input:focus{border-color:var(--accent-primary)}
 .priority-select,.status-select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23e8b440' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:32px}
 .tags{display:flex;flex-wrap:wrap;gap:8px}
 .tag{padding:6px 14px;font-size:12px;background:rgba(232,180,64,0.05);border:1px solid var(--border-color);color:var(--text-secondary);cursor:pointer;transition:all 0.2s;font-family:'Noto Sans SC',sans-serif;letter-spacing:0.5px}
@@ -191,6 +190,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
 .copy-toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);padding:10px 24px;background:var(--accent-primary);color:var(--bg-primary);font-size:12px;font-weight:600;opacity:0;transition:all 0.3s;z-index:5000}
 .copy-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .review-reason{padding:10px 14px;background:rgba(208,64,64,0.08);border-left:3px solid var(--danger);color:var(--text-secondary);font-size:12px;margin-top:10px}
+.student-id-display { font-family: 'JetBrains Mono', monospace; color: var(--accent-cyan); font-weight: bold; }
 @media(max-width:900px){.header{padding:0 16px}.main{padding:20px 16px}.stats-bar{grid-template-columns:repeat(2,1fr)}.stats-grid{grid-template-columns:1fr}.nav-btn{padding:8px 12px;font-size:12px}.header-status{display:none}.logo-sub{display:none}.filter-bar{grid-template-columns:1fr}.hero-title{font-size:20px}.hero-stats{gap:16px}.bar-row{grid-template-columns:100px 1fr 50px}}
 ::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:var(--bg-primary)}::-webkit-scrollbar-thumb{background:var(--accent-dim)}::-webkit-scrollbar-thumb:hover{background:var(--accent-primary)}
 .tab-content{display:none}.tab-content.active{display:block}
@@ -199,9 +199,24 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
 @keyframes skeleton{0%{background-position:200% 0}100%{background-position:-200% 0}}
 .spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border-color);border-top-color:var(--accent-primary);border-radius:50%;animation:spin 0.8s linear infinite;vertical-align:middle;margin-right:6px}
 @keyframes spin{to{transform:rotate(360deg)}}
+/* 学号输入模态框样式 */
+#studentIdModal { z-index: 10000; background: rgba(0,0,0,0.95); }
+.student-modal-content { background: var(--bg-secondary); border: 1px solid var(--accent-primary); padding: 40px; max-width: 400px; width: 90%; clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px)); text-align: center; }
 </style>
 </head>
 <body>
+
+<!-- 学号输入模态框 -->
+<div class="modal-overlay" id="studentIdModal">
+  <div class="student-modal-content">
+    <h2 style="color: var(--accent-primary); margin-bottom: 20px; letter-spacing: 2px;">身份验证</h2>
+    <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 13px;">请输入您的学号以访问先研实验室问答平台</p>
+    <div class="form-group">
+      <input type="text" class="student-input" id="studentIdInput" placeholder="请输入学号 (例如: 20210001)" style="text-align: center; font-size: 16px; letter-spacing: 2px;">
+    </div>
+    <button class="btn btn-primary" style="width: 100%;" onclick="saveStudentId()">进入平台</button>
+  </div>
+</div>
 
 <div class="corner-decor top-left"></div>
 <div class="corner-decor bottom-right"></div>
@@ -211,13 +226,13 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
     <img class="logo-icon" src="https://ysyx.oscc.cc/res/images/logo/ysyx.png" alt="一生一芯">
     <div class="logo-text-wrap">
       <div class="logo-text">先研实验室<span class="logo-badge">一生一芯</span></div>
-      <div class="logo-sub">XIANR_LAB · Q&A_SYSTEM v4.0 · CLOUD</div>
+      <div class="logo-sub">XIANR_LAB · Q&A_SYSTEM v4.1 · STUDENT_ID</div>
     </div>
   </div>
   <nav class="nav">
     <button class="nav-btn active" onclick="switchPage('home')">首页</button>
     <button class="nav-btn" onclick="switchPage('ask')">我要提问</button>
-    <button class="nav-btn" onclick="switchPage('stats')">数据统计</button>
+    <button class="nav-btn" onclick="switchPage('profile')">个人中心</button>
     <button class="nav-btn" onclick="switchPage('admin')">
       管理
       <span class="nav-badge" id="pendingBadge" style="display:none;">0</span>
@@ -231,11 +246,12 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
 </header>
 
 <main class="main">
+
   <div class="page active" id="page-home">
     <div class="hero">
       <div class="hero-tag">// OPEN_SOURCE_CHIP_DESIGN</div>
       <div class="hero-title">一生一芯 · 技术互助社区</div>
-      <div class="hero-desc">面向「一生一芯」项目参与者的匿名问答平台。分享 Chisel、RISC-V、流水线设计、SoC 集成、验证调试等方面的经验，所有问题经管理员审核后公开展示。</div>
+      <div class="hero-desc">面向「一生一芯」项目参与者的问答平台。分享 Chisel、RISC-V、流水线设计、SoC 集成、验证调试等方面的经验，所有问题经管理员审核后公开展示。</div>
       <div class="hero-stats">
         <div class="hero-stat"><div class="hero-stat-label">TOTAL_QUERIES</div><div class="hero-stat-value" id="hero-total">—</div></div>
         <div class="hero-stat"><div class="hero-stat-label">ADOPTED_RATE</div><div class="hero-stat-value" id="hero-adopted">—</div></div>
@@ -277,7 +293,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
   <div class="page" id="page-ask">
     <div class="section-header">
       <h2 class="section-title">提交问题</h2>
-      <span class="section-meta">NEW_QUERY // ANONYMOUS · REVIEW_REQUIRED</span>
+      <span class="section-meta">NEW_QUERY // STUDENT: <span class="student-id-display" id="askStudentIdDisplay">---</span></span>
     </div>
     <div class="card" style="padding:30px">
       <div class="form-group">
@@ -307,7 +323,6 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
       <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
         <button class="btn btn-primary" id="submitBtn" onclick="submitQuestion()">提交审核</button>
         <button class="btn btn-secondary" onclick="clearForm()">清空表单</button>
-        <span style="margin-left:auto;font-size:11px;color:var(--text-dim);font-family:'JetBrains Mono',monospace">🔒 匿名提交 · 需管理员审核后公开</span>
       </div>
     </div>
     <div style="margin-top:40px">
@@ -319,31 +334,49 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
     </div>
   </div>
 
-  <div class="page" id="page-stats">
+  <!-- 个人中心页面 (原数据统计页面改造) -->
+  <div class="page" id="page-profile">
     <div class="section-header">
-      <h2 class="section-title">数据统计</h2>
-      <span class="section-meta">ANALYTICS // REAL_TIME</span>
+      <h2 class="section-title">个人中心</h2>
+      <span class="section-meta">PROFILE // STUDENT: <span class="student-id-display" id="profileStudentIdDisplay">---</span></span>
     </div>
-    <div class="stats-bar">
-      <div class="stat-card"><div class="stat-label">TOTAL_QUESTIONS</div><div class="stat-value" id="stats-total-q">—</div></div>
-      <div class="stat-card"><div class="stat-label">TOTAL_ANSWERS</div><div class="stat-value cyan" id="stats-total-a">—</div></div>
-      <div class="stat-card"><div class="stat-label">ADOPTED</div><div class="stat-value ok" id="stats-adopted">—</div></div>
-      <div class="stat-card"><div class="stat-label">ADOPTION_RATE</div><div class="stat-value warn" id="stats-rate">—</div></div>
+    
+    <!-- 个人数据统计 -->
+    <div class="stats-bar" id="personalStatsBar">
+      <div class="stat-card"><div class="stat-label">MY_QUESTIONS</div><div class="stat-value" id="p-stat-q">—</div></div>
+      <div class="stat-card"><div class="stat-label">MY_ANSWERS</div><div class="stat-value cyan" id="p-stat-a">—</div></div>
+      <div class="stat-card"><div class="stat-label">MY_ADOPTED</div><div class="stat-value ok" id="p-stat-adopted">—</div></div>
+      <div class="stat-card"><div class="stat-label">ADOPTION_RATE</div><div class="stat-value warn" id="p-stat-rate">—</div></div>
     </div>
-    <div class="stats-grid">
-      <div class="stats-panel"><div class="stats-panel-title">进度分布 <span>BY_PROGRESS</span></div><div id="progressStats"></div></div>
-      <div class="stats-panel"><div class="stats-panel-title">优先级分布 <span>BY_PRIORITY</span></div><div id="priorityStats"></div></div>
-      <div class="stats-panel"><div class="stats-panel-title">审核状态 <span>REVIEW_STATUS</span></div><div class="donut-chart" id="reviewDonut"></div></div>
-      <div class="stats-panel"><div class="stats-panel-title">回答者排行 <span>TOP_HELPERS</span></div><ul class="rank-list" id="helperRank"></ul></div>
-    </div>
-    <div class="stats-panel" style="margin-bottom:20px">
-      <div class="stats-panel-title">近 14 天提问趋势 <span>14_DAY_TIMELINE</span></div>
-      <div class="timeline-chart" id="timelineChart"></div>
-      <div class="timeline-labels" id="timelineLabels" style="display:flex;gap:4px;margin-top:6px;font-size:9px;color:var(--text-dim);font-family:'JetBrains Mono',monospace"></div>
-    </div>
-    <div class="stats-grid">
-      <div class="stats-panel"><div class="stats-panel-title">采纳统计 <span>ADOPTION_ANALYSIS</span></div><div id="adoptionStats"></div></div>
-      <div class="stats-panel"><div class="stats-panel-title">回答统计 <span>ANSWER_ANALYSIS</span></div><div id="answerAnalysis"></div></div>
+
+    <!-- 管理员专属：全站数据统计 (默认隐藏，JS控制显示) -->
+    <div id="adminStatsSection" style="display: none;">
+      <div class="decor-line"></div>
+      <div class="section-header" style="margin-top: 30px;">
+        <h2 class="section-title">全站数据统计 (管理员视图)</h2>
+        <span class="section-meta">ANALYTICS // REAL_TIME</span>
+      </div>
+      <div class="stats-bar">
+        <div class="stat-card"><div class="stat-label">TOTAL_QUESTIONS</div><div class="stat-value" id="stats-total-q">—</div></div>
+        <div class="stat-card"><div class="stat-label">TOTAL_ANSWERS</div><div class="stat-value cyan" id="stats-total-a">—</div></div>
+        <div class="stat-card"><div class="stat-label">ADOPTED</div><div class="stat-value ok" id="stats-adopted">—</div></div>
+        <div class="stat-card"><div class="stat-label">ADOPTION_RATE</div><div class="stat-value warn" id="stats-rate">—</div></div>
+      </div>
+      <div class="stats-grid">
+        <div class="stats-panel"><div class="stats-panel-title">进度分布 <span>BY_PROGRESS</span></div><div id="progressStats"></div></div>
+        <div class="stats-panel"><div class="stats-panel-title">优先级分布 <span>BY_PRIORITY</span></div><div id="priorityStats"></div></div>
+        <div class="stats-panel"><div class="stats-panel-title">审核状态 <span>REVIEW_STATUS</span></div><div class="donut-chart" id="reviewDonut"></div></div>
+        <div class="stats-panel"><div class="stats-panel-title">回答者排行 <span>TOP_HELPERS</span></div><ul class="rank-list" id="helperRank"></ul></div>
+      </div>
+      <div class="stats-panel" style="margin-bottom:20px">
+        <div class="stats-panel-title">近 14 天提问趋势 <span>14_DAY_TIMELINE</span></div>
+        <div class="timeline-chart" id="timelineChart"></div>
+        <div class="timeline-labels" id="timelineLabels" style="display:flex;gap:4px;margin-top:6px;font-size:9px;color:var(--text-dim);font-family:'JetBrains Mono',monospace"></div>
+      </div>
+      <div class="stats-grid">
+        <div class="stats-panel"><div class="stats-panel-title">采纳统计 <span>ADOPTION_ANALYSIS</span></div><div id="adoptionStats"></div></div>
+        <div class="stats-panel"><div class="stats-panel-title">回答统计 <span>ANSWER_ANALYSIS</span></div><div id="answerAnalysis"></div></div>
+      </div>
     </div>
   </div>
 
@@ -419,7 +452,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
 
 <footer class="footer">
   <span>© 2026 先研实验室 · 一生一芯项目技术问答平台 · Powered by Supabase</span>
-  <span>SESSION: <span id="sessionId">---</span></span>
+  <span>STUDENT ID: <span class="student-id-display" id="footerStudentId">---</span></span>
 </footer>
 
 <div class="modal-overlay" id="answerModal">
@@ -452,17 +485,11 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
 
 <script>
 (function() {
-  // ============================================================
-  // Supabase 配置
-  // ============================================================
   const SUPABASE_URL = 'https://aybzbnscgnbvlhdekwej.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF5YnpibnNjZ25idmxoZGVrd2VqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0MDAxNTAsImV4cCI6MjA5NDk3NjE1MH0.143pyKjrNhdfpnlMCYVy7Lips0bvPMn5mbFmiTP9NTg';
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  // ============================================================
-  // 常量
-  // ============================================================
-  const SESSION_KEY = 'xianr_session';
+  const STUDENT_ID_KEY = 'xianr_student_id';
   const PROGRESS_TAGS = [
     { id: 'f1', label: 'F1 如何科学地提问', icon: 'F1' },
     { id: 'f2', label: 'F2 Logisim安装和使用', icon: 'F2' },
@@ -481,22 +508,32 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
     { id: 'e5', label: 'E5 Verilog的RTL综合语义', icon: 'E5' }
   ];
 
-  // ============================================================
-  // 状态
-  // ============================================================
   let currentFilter = 'all', currentSearch = '', currentPriority = 'all', currentStatus = 'all';
   let currentAnswerQuestionId = null, currentDetailQuestionId = null;
   let selectedProgress = new Set();
   let cache = { approvedQuestions: [], myQuestions: [], allQuestions: [], pendingCount: 0, isAdmin: false, lastFetch: 0 };
 
-  // ============================================================
-  // 工具函数
-  // ============================================================
-  function getSessionId() {
-    let sid = sessionStorage.getItem(SESSION_KEY);
-    if (!sid) { sid = 'USR-' + Math.random().toString(36).substr(2, 8).toUpperCase(); sessionStorage.setItem(SESSION_KEY, sid); }
-    return sid;
+  // 学号相关函数
+  function getStudentId() {
+    return sessionStorage.getItem(STUDENT_ID_KEY) || '';
   }
+  
+  window.saveStudentId = function() {
+    const sid = document.getElementById('studentIdInput').value.trim();
+    if (!sid) { alert('请输入学号！'); return; }
+    sessionStorage.setItem(STUDENT_ID_KEY, sid);
+    document.getElementById('studentIdModal').classList.remove('active');
+    updateStudentIdDisplay();
+    initApp();
+  };
+
+  function updateStudentIdDisplay() {
+    const sid = getStudentId();
+    document.getElementById('footerStudentId').textContent = sid || '---';
+    document.getElementById('profileStudentIdDisplay').textContent = sid || '---';
+    document.getElementById('askStudentIdDisplay').textContent = sid || '---';
+  }
+
   function generateQid() { return 'Q-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substr(2, 4).toUpperCase(); }
   function generateAid() { return 'A-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substr(2, 4).toUpperCase(); }
   function showNotification(msg, type = 'success') {
@@ -520,9 +557,6 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
   function getProgressLabel(id) { const p = PROGRESS_TAGS.find(t => t.id === id); return p ? p.label : id; }
   function getProgressIcon(id) { const p = PROGRESS_TAGS.find(t => t.id === id); return p ? p.icon : '●'; }
 
-  // ============================================================
-  // Supabase 数据层
-  // ============================================================
   async function checkConnection() {
     const dot = document.getElementById('statusDot'), label = document.getElementById('connStatus');
     try {
@@ -538,22 +572,16 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
     }
   }
 
-  // ✅ 修复：移除了 Promise.all 中的 .catch()，改为顺序 await
   async function refreshData() {
-    const session = getSessionId();
+    const session = getStudentId();
+    if (!session) return false;
     const qRes = await supabase.rpc('get_my_questions', { my_session: session });
     const pRes = await supabase.rpc('get_pending_count');
 
-    if (qRes.error) { 
-      console.error('fetch questions:', qRes.error); 
-      showNotification('数据加载失败: ' + qRes.error.message, 'error'); 
-      return false; 
-    }
-    
+    if (qRes.error) { console.error('fetch questions:', qRes.error); showNotification('数据加载失败: ' + qRes.error.message, 'error'); return false; }
     const questions = qRes.data || [];
     const qids = questions.map(q => q.id);
     let answersByQ = {};
-    
     if (qids.length > 0) {
       const aRes = await supabase.from('answers').select('*').in('question_id', qids).order('created_at', { ascending: true });
       if (!aRes.error && aRes.data) {
@@ -585,26 +613,21 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
     cache.pendingCount = questions.filter(q => q.status === 'pending').length;
   }
 
-  // ============================================================
-  // 页面切换
-  // ============================================================
   window.switchPage = async function(page) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('page-' + page).classList.add('active');
-    const idx = ['home', 'ask', 'stats', 'admin'].indexOf(page);
-    document.querySelectorAll('.nav-btn')[idx].classList.add('active');
+    const idx = ['home', 'ask', 'profile', 'admin'].indexOf(page);
+    if (idx !== -1) document.querySelectorAll('.nav-btn')[idx].classList.add('active');
+    
     if (page === 'home') await renderQuestions();
     else if (page === 'ask') { renderProgressGrid(); await renderMyQuestions(); }
-    else if (page === 'stats') await renderStatsPage();
+    else if (page === 'profile') await renderProfilePage();
     else if (page === 'admin') {
       if (cache.isAdmin) { await refreshAllForAdmin(); renderReviewQueue(); renderAdminQuestions(); updateAdminOverview(); }
     }
   };
 
-  // ============================================================
-  // 进度标签
-  // ============================================================
   function renderProgressGrid() {
     const grid = document.getElementById('progressGrid');
     grid.innerHTML = PROGRESS_TAGS.map(p => `
@@ -623,9 +646,6 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
     });
   }
 
-  // ============================================================
-  // 筛选标签
-  // ============================================================
   function renderFilterTags() {
     const approved = cache.approvedQuestions;
     const counts = {};
@@ -645,9 +665,6 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
     renderQuestionsList();
   };
 
-  // ============================================================
-  // 渲染问题列表
-  // ============================================================
   async function renderQuestions() {
     await refreshData();
     updatePendingBadge();
@@ -693,29 +710,38 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
       container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><div class="empty-state-text">暂无符合条件的问题</div></div>';
       return;
     }
-    container.innerHTML = questions.map(q => renderQuestionCard(q)).join('');
+    container.innerHTML = questions.map(q => renderQuestionCard(q, false)).join('');
   }
 
-  function renderQuestionCard(q) {
+  function renderQuestionCard(q, isAdminView = false) {
     const answered = q.answers.length > 0, adopted = q.answers.some(a => a.adopted);
-    const isOwner = q.session_id === getSessionId();
+    const isOwner = q.session_id === getStudentId();
     const progressTags = (q.progress || []).map(p => `<span class="card-tag progress">${getProgressIcon(p)} ${getProgressLabel(p)}</span>`).join('');
-    const answersHtml = q.answers.map(a => `
+    
+    // 管理员视图显示学号
+    const ownerInfo = isAdminView ? `<span style="font-size:10px;color:var(--accent-cyan);margin-right:8px">[提问者: ${q.session_id}]</span>` : '';
+    
+    const answersHtml = q.answers.map(a => {
+      const answererInfo = isAdminView ? `<span style="font-size:10px;color:var(--accent-cyan)">[回答者: ${a.session_id || '未知'}]</span>` : '';
+      return `
       <div class="answer-item ${a.adopted ? 'adopted' : ''}">
         <div>${escapeHtml(a.content)}${a.adopted ? '<span class="adopted-badge">✓ 已采纳</span>' : ''}</div>
         <div class="answer-meta">
-          <span>— ${a.nickname || '匿名'} · ${formatTime(a.created_at)}</span>
+          <span>— ${a.nickname || '匿名'} ${answererInfo} · ${formatTime(a.created_at)}</span>
           ${isOwner && !adopted && q.status === 'approved' ? `<button class="card-action-btn success" onclick="adoptAnswer('${q.id}','${a.id}')">采纳</button>` : ''}
         </div>
-      </div>`).join('');
+      </div>`;
+    }).join('');
+    
     let statusBadge = '';
     if (q.status === 'pending') statusBadge = '<span class="card-status pending">PENDING</span>';
     if (q.status === 'rejected') statusBadge = '<span class="card-status rejected">REJECTED</span>';
+    
     return `
       <div class="card ${q.status !== 'approved' ? q.status + '-review' : ''}">
         <div class="card-header">
           <span class="card-id" onclick="copyId('${q.qid}')">${q.qid}</span>
-          <div class="card-meta">${statusBadge}<span class="priority-badge ${q.priority}">${q.priority === 'high' ? '● HIGH' : q.priority === 'medium' ? '● MED' : '● LOW'}</span>${progressTags}</div>
+          <div class="card-meta">${ownerInfo}${statusBadge}<span class="priority-badge ${q.priority}">${q.priority === 'high' ? '● HIGH' : q.priority === 'medium' ? '● MED' : '● LOW'}</span>${progressTags}</div>
         </div>
         <div class="card-body">
           <div class="card-title">${escapeHtml(q.title)}</div>
@@ -735,14 +761,13 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
       </div>`;
   }
 
-  // ============================================================
-  // 提交问题
-  // ============================================================
   window.submitQuestion = async function() {
     const title = document.getElementById('askTitle').value.trim();
     const content = document.getElementById('askContent').value.trim();
     const priority = document.getElementById('askPriority').value;
     const progress = Array.from(selectedProgress);
+    const sid = getStudentId();
+    if (!sid) { showNotification('请先输入学号', 'error'); return; }
     if (!title) { showNotification('请输入问题标题', 'error'); return; }
     if (!content) { showNotification('请输入问题详情', 'error'); return; }
     if (title.length > 100) { showNotification('标题不能超过100个字符', 'error'); return; }
@@ -750,19 +775,11 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
     
     const btn = document.getElementById('submitBtn');
     btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>提交中...';
-    
     const qid = generateQid();
-    const id = crypto.randomUUID(); // ✅ 修复：显式生成 id 以匹配 SQL DEFAULT gen_random_uuid() 或防止报错
-    
-    const { error } = await supabase.from('questions').insert({ 
-      id, // ✅ 显式传递 id
-      qid, title, content, progress, priority, 
-      status: 'pending', session_id: getSessionId() 
-    });
-    
+    const id = crypto.randomUUID();
+    const { error } = await supabase.from('questions').insert({ id, qid, title, content, progress, priority, status: 'pending', session_id: sid });
     btn.disabled = false; btn.textContent = '提交审核';
     if (error) { showNotification('提交失败: ' + error.message, 'error'); return; }
-    
     clearForm(); showNotification('问题已提交，等待管理员审核。ID: ' + qid);
     await renderMyQuestions(); updatePendingBadge();
   };
@@ -777,7 +794,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
 
   async function renderMyQuestions() {
     await refreshData();
-    const myQ = cache.myQuestions.filter(q => q.session_id === getSessionId());
+    const myQ = cache.myQuestions.filter(q => q.session_id === getStudentId());
     const container = document.getElementById('myQuestions');
     if (myQ.length === 0) { container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📝</div><div class="empty-state-text">你还没有提过问题</div></div>'; return; }
     container.innerHTML = myQ.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).map(q => renderQuestionCard(q)).join('');
@@ -785,15 +802,12 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
 
   window.deleteOwnQuestion = async function(id) {
     if (!confirm('确定撤回这个问题吗？')) return;
-    const { data, error } = await supabase.rpc('delete_own_question', { p_question_id: id, my_session: getSessionId() });
+    const { data, error } = await supabase.rpc('delete_own_question', { p_question_id: id, my_session: getStudentId() });
     if (error) { showNotification('撤回失败: ' + error.message, 'error'); return; }
     if (data) { showNotification('问题已撤回'); await renderMyQuestions(); await renderQuestions(); }
     else showNotification('撤回失败（仅允许撤回未通过的问题）', 'error');
   };
 
-  // ============================================================
-  // 回答
-  // ============================================================
   window.openAnswer = async function(qid) {
     currentAnswerQuestionId = qid;
     const q = cache.myQuestions.find(q => q.id === qid) || cache.approvedQuestions.find(q => q.id === qid) || cache.allQuestions.find(q => q.id === qid);
@@ -807,15 +821,12 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
   window.submitAnswer = async function() {
     const content = document.getElementById('answerContent').value.trim();
     const nickname = document.getElementById('answerNickname').value.trim();
+    const sid = getStudentId();
     if (!content) { showNotification('请输入回答内容', 'error'); return; }
     const btn = document.getElementById('submitAnswerBtn');
     btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>提交中...';
-    const id = crypto.randomUUID(); // ✅ 修复：生成 id
-    const { error } = await supabase.from('answers').insert({ 
-      id, // ✅ 显式传递 id
-      question_id: currentAnswerQuestionId, 
-      aid: generateAid(), content, nickname: nickname || '匿名', adopted: false 
-    });
+    const id = crypto.randomUUID();
+    const { error } = await supabase.from('answers').insert({ id, question_id: currentAnswerQuestionId, aid: generateAid(), content, nickname: nickname || '匿名', session_id: sid, adopted: false });
     btn.disabled = false; btn.textContent = '提交回答';
     if (error) { showNotification('提交失败: ' + error.message, 'error'); return; }
     closeModal('answerModal'); showNotification('回答提交成功！');
@@ -824,7 +835,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
 
   window.adoptAnswer = async function(qid, aid) {
     if (!confirm('确定采纳这条回答为最佳答案吗？采纳后不可更改。')) return;
-    const { data, error } = await supabase.rpc('adopt_answer', { p_answer_id: aid, my_session: getSessionId() });
+    const { data, error } = await supabase.rpc('adopt_answer', { p_answer_id: aid, my_session: getStudentId() });
     if (error) { showNotification('采纳失败: ' + error.message, 'error'); return; }
     if (data) {
       showNotification('已采纳该回答！');
@@ -837,7 +848,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
     currentDetailQuestionId = qid;
     const q = cache.myQuestions.find(q => q.id === qid) || cache.approvedQuestions.find(q => q.id === qid) || cache.allQuestions.find(q => q.id === qid);
     if (!q) return;
-    const isOwner = q.session_id === getSessionId(), adopted = q.answers.some(a => a.adopted);
+    const isOwner = q.session_id === getStudentId(), adopted = q.answers.some(a => a.adopted);
     const progressHtml = (q.progress || []).map(p => `<span class="card-tag progress">${getProgressIcon(p)} ${getProgressLabel(p)}</span>`).join(' ');
     const answersHtml = q.answers.length > 0 ? q.answers.map(a => `
       <div class="answer-item ${a.adopted ? 'adopted' : ''}">
@@ -855,7 +866,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
       </div>
       <h3 style="font-size:18px;margin-bottom:14px;line-height:1.6">${escapeHtml(q.title)}</h3>
       <p style="font-size:14px;color:var(--text-secondary);line-height:1.9;white-space:pre-wrap;margin-bottom:18px">${escapeHtml(q.content)}</p>
-      <div style="font-size:11px;color:var(--text-dim);font-family:'JetBrains Mono',monospace">📅 ${formatFullTime(q.created_at)}</div>
+      <div style="font-size:11px;color:var(--text-dim);font-family:'JetBrains Mono',monospace">📅 ${formatFullTime(q.created_at)} · 提问者: ${q.session_id}</div>
       <div class="decor-line"></div>
       <h4 style="font-size:13px;color:var(--accent-primary);margin-bottom:12px;letter-spacing:2px">回答 (${q.answers.length})</h4>
       ${answersHtml}`;
@@ -872,29 +883,51 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
   };
   window.closeModal = function(id) { document.getElementById(id).classList.remove('active'); };
 
-  // ============================================================
-  // 数据统计
-  // ============================================================
-  async function renderStatsPage() {
+  // 个人中心页面渲染
+  async function renderProfilePage() {
     await refreshData();
-    const approved = cache.approvedQuestions;
-    const totalAnswers = approved.reduce((s, q) => s + q.answers.length, 0);
-    const adoptedQ = approved.filter(q => q.answers.some(a => a.adopted)).length;
-    const totalAdopted = approved.reduce((s, q) => s + q.answers.filter(a => a.adopted).length, 0);
-    document.getElementById('stats-total-q').textContent = approved.length;
+    const sid = getStudentId();
+    const myQuestions = cache.myQuestions.filter(q => q.session_id === sid);
+    const myAnswersCount = cache.myQuestions.reduce((sum, q) => sum + q.answers.filter(a => a.session_id === sid).length, 0);
+    const myAdoptedCount = cache.myQuestions.reduce((sum, q) => sum + q.answers.filter(a => a.session_id === sid && a.adopted).length, 0);
+    
+    document.getElementById('p-stat-q').textContent = myQuestions.length;
+    document.getElementById('p-stat-a').textContent = myAnswersCount;
+    document.getElementById('p-stat-adopted').textContent = myAdoptedCount;
+    document.getElementById('p-stat-rate').textContent = myAnswersCount > 0 ? Math.round(myAdoptedCount / myAnswersCount * 100) + '%' : '0%';
+
+    // 如果是管理员，显示全站统计
+    if (cache.isAdmin) {
+      document.getElementById('adminStatsSection').style.display = 'block';
+      renderFullStats();
+    } else {
+      document.getElementById('adminStatsSection').style.display = 'none';
+    }
+  }
+
+  async function renderFullStats() {
+    const approved = cache.approvedQuestions; // 注意：这里用的是当前用户视角的缓存，如果是管理员需要 refreshAllForAdmin 后的数据
+    // 为了准确，如果是管理员，使用 cache.allQuestions 过滤 approved
+    const allApproved = cache.isAdmin ? cache.allQuestions.filter(q => q.status === 'approved') : approved;
+    
+    const totalAnswers = allApproved.reduce((s, q) => s + q.answers.length, 0);
+    const adoptedQ = allApproved.filter(q => q.answers.some(a => a.adopted)).length;
+    const totalAdopted = allApproved.reduce((s, q) => s + q.answers.filter(a => a.adopted).length, 0);
+    
+    document.getElementById('stats-total-q').textContent = allApproved.length;
     document.getElementById('stats-total-a').textContent = totalAnswers;
     document.getElementById('stats-adopted').textContent = totalAdopted;
-    document.getElementById('stats-rate').textContent = approved.length ? Math.round(adoptedQ / approved.length * 100) + '%' : '0%';
+    document.getElementById('stats-rate').textContent = allApproved.length ? Math.round(adoptedQ / allApproved.length * 100) + '%' : '0%';
 
     const progressCounts = {};
     PROGRESS_TAGS.forEach(t => progressCounts[t.id] = 0);
-    approved.forEach(q => (q.progress || []).forEach(p => progressCounts[p] = (progressCounts[p] || 0) + 1));
+    allApproved.forEach(q => (q.progress || []).forEach(p => progressCounts[p] = (progressCounts[p] || 0) + 1));
     const maxProg = Math.max(...Object.values(progressCounts), 1);
     document.getElementById('progressStats').innerHTML = PROGRESS_TAGS.filter(t => progressCounts[t.id] > 0).map(t => `
       <div class="bar-row"><div class="bar-label">${t.icon} ${t.label}</div><div class="bar-track"><div class="bar-fill cyan" style="width:${progressCounts[t.id] / maxProg * 100}%"></div></div><div class="bar-value cyan">${progressCounts[t.id]}</div></div>`).join('') || '<div style="color:var(--text-dim);font-size:12px">暂无数据</div>';
 
     const priCounts = { high: 0, medium: 0, low: 0 };
-    approved.forEach(q => priCounts[q.priority]++);
+    allApproved.forEach(q => priCounts[q.priority]++);
     const maxPri = Math.max(...Object.values(priCounts), 1);
     document.getElementById('priorityStats').innerHTML = Object.entries(priCounts).map(([k, v]) => `
       <div class="bar-row"><div class="bar-label">${k === 'high' ? '🔴 高' : k === 'medium' ? '🟠 中' : '🟢 低'}</div><div class="bar-track"><div class="bar-fill" style="width:${v / maxPri * 100}%"></div></div><div class="bar-value">${v}</div></div>`).join('');
@@ -902,13 +935,13 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
     let reviewCounts = { approved: 0, pending: 0, rejected: 0 };
     const rcRes = await supabase.rpc('get_pending_count');
     reviewCounts.pending = rcRes.data || 0;
-    reviewCounts.approved = approved.length;
+    reviewCounts.approved = allApproved.length;
     const rejRes = await supabase.from('questions').select('id', { count: 'exact', head: true }).eq('status', 'rejected');
     reviewCounts.rejected = rejRes.count || 0;
     renderDonut(reviewCounts);
 
     const helperStats = {};
-    approved.forEach(q => q.answers.forEach(a => {
+    allApproved.forEach(q => q.answers.forEach(a => {
       const name = a.nickname || '匿名';
       if (!helperStats[name]) helperStats[name] = { count: 0, adopted: 0 };
       helperStats[name].count++;
@@ -918,10 +951,10 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
     document.getElementById('helperRank').innerHTML = topHelpers.length ? topHelpers.map(([name, s], i) => `
       <li class="rank-item"><span class="rank-pos">#${i + 1}</span><span class="rank-name">${escapeHtml(name)}${s.adopted > 0 ? ` <span style="color:var(--success);font-size:11px">✓${s.adopted}</span>` : ''}</span><span class="rank-count">${s.count}条</span></li>`).join('') : '<div style="color:var(--text-dim);font-size:12px;padding:12px 0">暂无回答数据</div>';
 
-    renderTimeline();
+    renderTimeline(allApproved);
 
     const adoptionByProgress = {};
-    approved.forEach(q => { (q.progress || []).forEach(p => {
+    allApproved.forEach(q => { (q.progress || []).forEach(p => {
       if (!adoptionByProgress[p]) adoptionByProgress[p] = { total: 0, adopted: 0 };
       adoptionByProgress[p].total++;
       if (q.answers.some(a => a.adopted)) adoptionByProgress[p].adopted++;
@@ -929,16 +962,16 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
     document.getElementById('adoptionStats').innerHTML = Object.keys(adoptionByProgress).length ? Object.entries(adoptionByProgress).map(([p, s]) => `
       <div class="bar-row"><div class="bar-label">${getProgressIcon(p)} ${getProgressLabel(p)}</div><div class="bar-track"><div class="bar-fill" style="width:${s.total ? s.adopted / s.total * 100 : 0}%"></div></div><div class="bar-value">${s.adopted}/${s.total}</div></div>`).join('') : '<div style="color:var(--text-dim);font-size:12px">暂无采纳数据</div>';
 
-    const multiAnsQ = approved.filter(q => q.answers.length > 1).length;
-    const oneAnsQ = approved.filter(q => q.answers.length === 1).length;
-    const zeroAnsQ = approved.filter(q => q.answers.length === 0).length;
+    const multiAnsQ = allApproved.filter(q => q.answers.length > 1).length;
+    const oneAnsQ = allApproved.filter(q => q.answers.length === 1).length;
+    const zeroAnsQ = allApproved.filter(q => q.answers.length === 0).length;
     const maxA = Math.max(multiAnsQ, oneAnsQ, zeroAnsQ, 1);
     document.getElementById('answerAnalysis').innerHTML = `
       <div class="bar-row"><div class="bar-label">多回答 (≥2)</div><div class="bar-track"><div class="bar-fill" style="width:${multiAnsQ / maxA * 100}%"></div></div><div class="bar-value">${multiAnsQ}</div></div>
       <div class="bar-row"><div class="bar-label">单回答 (=1)</div><div class="bar-track"><div class="bar-fill cyan" style="width:${oneAnsQ / maxA * 100}%"></div></div><div class="bar-value cyan">${oneAnsQ}</div></div>
       <div class="bar-row"><div class="bar-label">零回答 (=0)</div><div class="bar-track"><div class="bar-fill" style="width:${zeroAnsQ / maxA * 100}%;background:linear-gradient(90deg,rgba(208,64,64,0.5),var(--danger))"></div></div><div class="bar-value" style="color:var(--danger)">${zeroAnsQ}</div></div>
       <div style="margin-top:16px;padding-top:12px;border-top:1px dashed var(--border-color);font-size:12px;color:var(--text-secondary);line-height:1.7">
-        <div>📊 平均每问题回答数：<span style="color:var(--accent-primary);font-family:'JetBrains Mono',monospace">${approved.length ? (totalAnswers / approved.length).toFixed(2) : 0}</span></div>
+        <div>📊 平均每问题回答数：<span style="color:var(--accent-primary);font-family:'JetBrains Mono',monospace">${allApproved.length ? (totalAnswers / allApproved.length).toFixed(2) : 0}</span></div>
         <div>⭐ 平均每条回答采纳率：<span style="color:var(--accent-primary);font-family:'JetBrains Mono',monospace">${totalAnswers ? (totalAdopted / totalAnswers * 100).toFixed(1) + '%' : '0%'}</span></div>
       </div>`;
   }
@@ -968,13 +1001,12 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
       </div>`;
   }
 
-  function renderTimeline() {
-    const approved = cache.approvedQuestions;
+  function renderTimeline(approvedList) {
     const days = [], counts = [];
     const now = new Date(); now.setHours(0, 0, 0, 0);
     for (let i = 13; i >= 0; i--) {
       const d = new Date(now); d.setDate(d.getDate() - i); days.push(d);
-      counts.push(approved.filter(q => new Date(q.created_at).toDateString() === d.toDateString()).length);
+      counts.push(approvedList.filter(q => new Date(q.created_at).toDateString() === d.toDateString()).length);
     }
     const max = Math.max(...counts, 1);
     document.getElementById('timelineChart').innerHTML = counts.map((c, i) => `<div class="timeline-bar" style="height:${c ? (c / max * 100) : 3}%"></div>`).join('');
@@ -984,9 +1016,6 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
     }).join('');
   }
 
-  // ============================================================
-  // 管理员
-  // ============================================================
   window.adminLogin_fn = async function() {
     const email = document.getElementById('adminEmail').value.trim();
     const password = document.getElementById('adminPassword').value;
@@ -1039,7 +1068,10 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
       return `
         <div class="card">
           <div class="card-header"><span class="card-id">${q.qid}</span><div class="card-meta"><span class="card-status pending">PENDING</span><span class="priority-badge ${q.priority}">${q.priority === 'high' ? '● HIGH' : q.priority === 'medium' ? '● MED' : '● LOW'}</span>${progressHtml}</div></div>
-          <div class="card-body"><div class="card-title">${escapeHtml(q.title)}</div><div class="card-content">${escapeHtml(q.content)}</div></div>
+          <div class="card-body">
+            <div style="font-size:11px;color:var(--accent-cyan);margin-bottom:8px;font-family:'JetBrains Mono',monospace">👤 提问学号: ${q.session_id}</div>
+            <div class="card-title">${escapeHtml(q.title)}</div><div class="card-content">${escapeHtml(q.content)}</div>
+          </div>
           <div class="card-footer" style="flex-direction:column;align-items:stretch">
             <div style="display:flex;justify-content:space-between;width:100%"><span>${formatFullTime(q.created_at)}</span></div>
             <div class="review-actions">
@@ -1083,7 +1115,9 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
       return `
         <div class="card">
           <div class="card-header"><span class="card-id">${q.qid}</span><div class="card-meta"><span class="card-status ${q.status}">${statusLabel}</span><span class="priority-badge ${q.priority}">${q.priority === 'high' ? '● HIGH' : q.priority === 'medium' ? '● MED' : '● LOW'}</span>${progressHtml}</div></div>
-          <div class="card-body"><div class="card-title">${escapeHtml(q.title)}</div><div class="card-content">${escapeHtml(q.content.substring(0, 150))}${q.content.length > 150 ? '...' : ''}</div>
+          <div class="card-body">
+            <div style="font-size:11px;color:var(--accent-cyan);margin-bottom:8px;font-family:'JetBrains Mono',monospace">👤 提问学号: ${q.session_id}</div>
+            <div class="card-title">${escapeHtml(q.title)}</div><div class="card-content">${escapeHtml(q.content.substring(0, 150))}${q.content.length > 150 ? '...' : ''}</div>
             ${q.reject_reason ? `<div class="review-reason">📛 拒绝理由：${escapeHtml(q.reject_reason)}</div>` : ''}
             <div style="margin-top:8px;font-size:11px;font-family:'JetBrains Mono',monospace;color:${q.answers.length > 0 ? 'var(--success)' : 'var(--warning)'}">${q.answers.length > 0 ? `✓ ${q.answers.length} 条回答${q.answers.some(a => a.adopted) ? ' · ⭐ 已采纳' : ''}` : '⏳ 暂无回答'}</div>
           </div>
@@ -1148,16 +1182,12 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
     showNotification('所有数据已清空');
   };
 
-  // ============================================================
-  // 时钟 & 初始化
-  // ============================================================
   function updateClock() {
     const now = new Date();
     document.getElementById('currentTime').textContent = now.toLocaleTimeString('zh-CN', { hour12: false });
   }
 
-  async function init() {
-    document.getElementById('sessionId').textContent = getSessionId();
+  async function initApp() {
     updateClock();
     setInterval(updateClock, 1000);
     renderProgressGrid();
@@ -1188,7 +1218,16 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-eve
     });
   }
 
-  init();
+  // 初始化检查学号
+  (function init() {
+    const sid = getStudentId();
+    if (!sid) {
+      document.getElementById('studentIdModal').classList.add('active');
+    } else {
+      updateStudentIdDisplay();
+      initApp();
+    }
+  })();
 })();
 </script>
 </body>
