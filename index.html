@@ -37,7 +37,7 @@
           <button id="photo-arrow" class="hotspot" aria-label="前往下一处"><img id="arrow-image" alt="" draggable="false"></button>
         </div>
         <div id="panorama" class="panorama" role="img" aria-label="拖动查看全景" tabindex="0" hidden></div>
-        <button id="panorama-arrow" class="hotspot panorama-hotspot" aria-label="前往下一处" hidden><img src="arrows/forward.png" alt=""><span id="panorama-next-label"></span></button>
+        <button id="panorama-arrow" class="hotspot panorama-hotspot" aria-label="前往下一处" hidden><img id="panorama-arrow-img" data-src="arrows/forward.png" alt="" draggable="false"><span id="panorama-next-label"></span></button>
         <div class="location-card"><span id="scene-type" class="scene-type"></span><span class="scene-count" id="scene-count"></span><h2 id="scene-title"></h2><p id="scene-description"></p></div>
         <div class="viewer-tools"><button id="pan-reset" aria-label="恢复全景初始视角" hidden>↺ 复位视角</button><button id="fullscreen" aria-label="全屏查看实景">⛶</button></div>
         <div id="loading" class="loading"><span class="spinner"></span>正在加载实景</div>
@@ -53,7 +53,7 @@
       </footer>
     </main>
   </div>
-  <dialog id="gallery-dialog" class="gallery-dialog"><div class="dialog-header"><div><span class="eyebrow">校园影像</span><h2>沿途的每一处风景</h2></div><button class="icon-tool" data-close="gallery-dialog" aria-label="关闭相册">×</button></div><div id="gallery-grid" class="gallery-grid"></div></dialog>
+  <dialog id="gallery-dialog" class="gallery-dialog"><div class="dialog-header"><div><span class="eyebrow">校园影像</span><h2>沿途的每一处风景</h2></div><button class="icon-tool" data-close="gallery-dialog" aria-label="关闭相册">×</button></div><div id="gallery-grid" class="gallery-grid"></div><button id="gallery-more" class="gallery-more" hidden></button></dialog>
   <dialog id="help-dialog" class="help-dialog"><button class="icon-tool dialog-close" data-close="help-dialog" aria-label="关闭帮助">×</button><span class="eyebrow">怎么走</span><h2>跟着红色箭头走。</h2><p>点击照片上的立体红色箭头，前往下一处。也可以用下方的按钮前进或返回。</p><p>全景画面可以左右拖动，或用键盘 ← / → 环顾四周。路线面板可直接选择位置，相册可查看全部素材。</p><button class="solid-button" data-close="help-dialog">开始探索</button></dialog>
   <dialog id="arrival-dialog" class="arrival-dialog"><button class="icon-tool dialog-close" data-close="arrival-dialog" aria-label="关闭终点提示">×</button><div class="arrival-check">✓</div><span class="eyebrow">路线终点</span><h2>已到学院走廊。</h2><p>这段实景路线已经走完。</p><div class="arrival-actions"><button class="solid-button" data-close="arrival-dialog">查看当前位置</button><button id="arrival-restart" class="text-button">从起点再走一次</button></div></dialog>
   <noscript><p class="noscript">请启用 JavaScript，以使用实景导航和全景浏览。</p></noscript>

@@ -92,6 +92,8 @@
     $('panorama-arrow').setAttribute('aria-label', `前往${nextScene ? nextScene.title : ''}`);
     $('panorama-next-label').textContent = nextScene ? `前往${nextScene.title}` : '路线终点';
     if (isPan) {
+      const panArrow = $('panorama-arrow-img');
+      if (!panArrow.src) panArrow.src = panArrow.dataset.src;
       panCenter = scene.center || 0.5;
       panorama.setAttribute('aria-label', `${scene.title}，左右拖动或按左右方向键环顾四周`);
       panorama.style.backgroundImage = `url("${scene.file}")`;
@@ -141,10 +143,38 @@
     return `<li><button data-scene="${id}"><span class="step-number">${String(index + 1).padStart(2, '0')}</span><span class="step-title">${scene.title}<span class="step-sub">${index === route.length - 1 ? '本段路线终点' : scene.type === 'panorama' ? '全景 · 环顾四周' : scene.action}</span></span></button></li>`;
   }).join('');
   document.querySelectorAll('#route-list button').forEach(button => button.addEventListener('click', () => goTo(Number(button.dataset.scene))));
-  $('gallery-grid').innerHTML = scenes.map(scene => `<button class="gallery-card" data-scene="${scene.id}"><img src="${scene.file}" alt="${scene.title}" loading="lazy"><div>${String(scene.id).padStart(2, '0')} · ${scene.title}<small>${route.includes(scene.id) ? '步行路线上的位置' : '沿途影像'}</small></div></button>`).join('');
-  document.querySelectorAll('#gallery-grid button').forEach(button => button.addEventListener('click', () => {
-    $('gallery-dialog').close(); goTo(Number(button.dataset.scene));
-  }));
+  const galleryDialog = $('gallery-dialog'), galleryGrid = $('gallery-grid'), galleryMore = $('gallery-more');
+  const pendingThumbs = new Set();
+  let thumbObserver = null;
+  function loadThumb(thumb) {
+    thumb.src = thumb.dataset.src;
+    delete thumb.dataset.src;
+    pendingThumbs.delete(thumb);
+    if (thumbObserver) thumbObserver.unobserve(thumb);
+  }
+  function revealThumbs() {
+    if (!('IntersectionObserver' in window)) { [...pendingThumbs].forEach(loadThumb); return; }
+    if (!thumbObserver) thumbObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => { if (entry.isIntersecting) loadThumb(entry.target); });
+    }, { rootMargin: '200px' });
+    pendingThumbs.forEach(thumb => thumbObserver.observe(thumb));
+  }
+  const cardHtml = scene => `<button class="gallery-card" data-scene="${scene.id}"><img data-src="${scene.file}" alt="${scene.title}"><div>${String(scene.id).padStart(2, '0')} · ${scene.title}<small>${route.includes(scene.id) ? '步行路线上的位置' : '沿途影像'}</small></div></button>`;
+  function mountCards(list) {
+    galleryGrid.insertAdjacentHTML('beforeend', list.map(cardHtml).join(''));
+    galleryGrid.querySelectorAll('img[data-src]').forEach(thumb => pendingThumbs.add(thumb));
+    if (galleryDialog.open) revealThumbs();
+  }
+  const extraScenes = scenes.filter(scene => !route.includes(scene.id));
+  mountCards(route.map(id => sceneById.get(id)));
+  galleryMore.textContent = `显示其余 ${extraScenes.length} 张沿途影像`;
+  galleryMore.hidden = extraScenes.length === 0;
+  galleryMore.addEventListener('click', () => { mountCards(extraScenes); galleryMore.hidden = true; });
+  galleryGrid.addEventListener('click', event => {
+    const card = event.target.closest('.gallery-card');
+    if (!card) return;
+    galleryDialog.close(); goTo(Number(card.dataset.scene));
+  });
   $('next').addEventListener('click', advance);
   $('photo-arrow').addEventListener('click', advance);
   $('panorama-arrow').addEventListener('click', advance);
@@ -153,7 +183,7 @@
   $('restart').addEventListener('click', restart);
   $('arrival-restart').addEventListener('click', restart);
   $('retry').addEventListener('click', () => showScene(currentId));
-  $('gallery-toggle').addEventListener('click', () => $('gallery-dialog').showModal());
+  $('gallery-toggle').addEventListener('click', () => { galleryDialog.showModal(); revealThumbs(); });
   $('help-toggle').addEventListener('click', () => $('help-dialog').showModal());
   document.querySelectorAll('[data-close]').forEach(button => button.addEventListener('click', () => $(button.dataset.close).close()));
   $('route-toggle').addEventListener('click', () => {
